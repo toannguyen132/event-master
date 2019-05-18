@@ -1,0 +1,6 @@
+api/.env
+api/.idea
+node_modules
+api/uploads
+yarn-error.log
+yarn.lock
