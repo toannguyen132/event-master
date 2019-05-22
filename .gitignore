@@ -2,5 +2,8 @@ api/.env
 api/.idea
 node_modules
 api/uploads
+web/.idea
+web/.env
+web/.next
 yarn-error.log
 yarn.lock
