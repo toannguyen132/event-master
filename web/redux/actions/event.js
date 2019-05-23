@@ -19,9 +19,15 @@ const fetchEvent = () => {
   return async (dispatch, getState) => {
     const api = apiGenerator()
 
-    const resp = await eventApi.search(api, {})
+    try{
 
-    dispatch(setEvents(resp.data))
+      const resp = await eventApi.search(api, {})
+      dispatch(setEvents(resp.data))
+
+    } catch (e) {
+      console.log('error:', e.message)
+      console.log('error stack:', e.stack)
+    }
   }
 }
 
