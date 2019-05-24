@@ -14,6 +14,7 @@ const encrypt = require('../../helpers/encrypt');
 function register(req, res, next) {
   const hashedPassword = encrypt.hashPassword(req.body.password);
   const newUser = new User({
+    name: req.body.name,
     email: req.body.email,
     password: hashedPassword,
   });
@@ -47,7 +48,7 @@ const login = async (req, res, next) => {
     }
 
   } catch (e) {
-    const err = new APIError('Authentication error', httpStatus.UNAUTHORIZED, true);
+    const err = new APIError('Authentication Error', httpStatus.UNAUTHORIZED, true);
     return next(err);
   }
 

@@ -1,13 +1,15 @@
 require('dotenv').config()
-const webpack = require('webpack')
 
 module.exports = () => {
 
   /* eslint-disable */
-  const withLess = require('@zeit/next-less')
+  const webpack = require('webpack')
   const lessToJS = require('less-vars-to-js')
   const fs = require('fs')
   const path = require('path')
+
+  const dev = process.env.NODE_ENV !== 'production'
+  const withLessExcludeAntd = require("./next-less.config.js")
 
   // Where your antd-custom.less file lives
   const themeVariables = lessToJS(
@@ -19,13 +21,19 @@ module.exports = () => {
     require.extensions['.less'] = file => {}
   }
 
-  return withLess({
+  return withLessExcludeAntd({
+    cssModules: true,
+    cssLoaderOptions: {
+      importLoaders: 1,
+      localIdentName: "[local]___[hash:base64:5]",
+    },
     lessLoaderOptions: {
       javascriptEnabled: true,
-      modifyVars: themeVariables // make your antd custom effective
+      modifyVars: themeVariables
     },
     webpack(config) {
       config.plugins.push(new webpack.EnvironmentPlugin(process.env))
+
       return config
     }
   })

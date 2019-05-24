@@ -1,4 +1,4 @@
-import Layout from '../components/Layout';
+import Layout from '../components/Layout'
 
 const About = () => {
   return (
@@ -8,4 +8,4 @@ const About = () => {
   )
 }
 
-export default About;
+export default About

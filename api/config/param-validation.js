@@ -16,6 +16,7 @@ module.exports = {
   // POST /api/auth/register
   register: {
     body: {
+      name: Joi.string().required(),
       email: Joi.string().email({ minDomainSegments: 2 }).required(),
       password: Joi.string().min(6).required(),
       passwordConfirm: Joi.any().valid(Joi.ref('password')).options({ language: { any: { allowOnly: 'must match password' } } }).required()

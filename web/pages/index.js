@@ -1,15 +1,13 @@
-import React, { Component } from 'react';
-import Layout from '../components/Layout.js'
-import Link from 'next/link'
-import axios from 'axios'
-import { Button } from 'antd'
-import { connect } from 'react-redux';
-import eventActions from '../redux/actions/event';
+import React  from 'react'
+import Layout from '../components/Layout'
+import { connect } from 'react-redux'
+import eventActions from '../redux/actions/event'
+import initialize from '../utils/initialize';
 
 
-class Index extends React.Component {
+class IndexPage extends React.Component {
   static async getInitialProps(ctx) {
-    const res = await axios.get('https://api.tvmaze.com/search/shows?q=batman')
+    // initialize(ctx)
 
     await ctx.store.dispatch(eventActions.fetchEvent())
 
@@ -35,4 +33,4 @@ const mapStateToProps = ({event}) => ({
   events: event.events
 })
 
-export default connect(mapStateToProps)(Index)
+export default connect(mapStateToProps)(IndexPage)

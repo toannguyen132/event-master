@@ -18,6 +18,28 @@ const devProxy = {
   }
 }
 
+/**
+ * middleware that
+ * @param req
+ * @param res
+ * @param next
+ */
+const requireNotAuth = (req, res, next) => {
+  if (req.cookies.token) {
+    console.log('already login, redirect to home')
+    res.redirect('/')
+  }
+  next()
+}
+
+const requireAuth = (req, res, next) => {
+  if (!req.cookies.token) {
+    console.log('require auth, redirect to login')
+    res.redirect('/login')
+  }
+  next()
+}
+
 
 // start express server to listen
 app
@@ -26,7 +48,7 @@ app
     const server = express()
 
     // enable cookie parser
-    server.use(cookieParser());
+    server.use(cookieParser())
 
     // Set up the proxy.
     if (dev && devProxy) {
@@ -36,11 +58,11 @@ app
       })
     }
 
-    server.get('/p/:id', (req, res) => {
-      const actualPage = '/post'
-      const queryParams = { id: req.params.id }
-      app.render(req, res, actualPage, queryParams)
-    })
+    /** route **/
+    // require auth
+    server.get('/login', [requireNotAuth], (req, res) => {
+      return app.render(req, res, '/login', req.query);
+    });
 
     server.get('*', (req, res) => {
       return handle(req, res)

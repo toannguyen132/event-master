@@ -1,4 +1,4 @@
-import Layout from '../components/Layout.js'
+import Layout from '../components/Layout'
 import axios from 'axios'
 
 const Post = props => (

@@ -1,5 +1,5 @@
-import authActions from './authentication';
+import authActions from './authentication'
 
 export default {
   ...authActions,
-};
+}

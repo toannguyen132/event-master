@@ -1,6 +1,8 @@
-import Router from 'next/router';
-import { AUTHENTICATE, DEAUTHENTICATE } from '../types';
-import { setCookie, removeCookie } from '../../utils/cookie';
+import Router from 'next/router'
+import { AUTHENTICATE, DEAUTHENTICATE } from '../types'
+import { setCookie, removeCookie } from '../../utils/cookie'
+import createApi from '../../api'
+import authApi from '../../api/auth'
 
 /**
  * NORMAL ACTIONS
@@ -16,13 +18,22 @@ const setAuthToken = token => {
  * ASYNC Action
  */
 // gets token from the api and stores it in the redux store and in cookie
-const authenticate = ({ email, password }, type) => {
-  return (dispatch) => {
+const authenticate = ({ email, password }) => {
+  return async (dispatch) => {
     const token = 'test-token'
-    setCookie('token', token)
-    dispatch(setAuthToken(token))
+    // login
+    const api = createApi();
+
+    try {
+      const resp = await authApi.login(api, {email, password})
+      setCookie('token', resp.data.token)
+      dispatch(setAuthToken(token))
+    } catch (e) {
+      return Promise.reject(e.message)
+    }
+
   }
-};
+}
 
 // gets the token from the cookie and saves it in the store
 const reauthenticate = (token) => {
