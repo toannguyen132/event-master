@@ -27,7 +27,7 @@ export const authenticate = ({ email, password }) => {
     try {
       const resp = await authApi.login(api, {email, password})
       setCookie('token', resp.data.token)
-      dispatch(setAuthToken(token))
+      dispatch(setAuthToken(resp.data.token))
     } catch (e) {
       return Promise.reject(e.message)
     }
