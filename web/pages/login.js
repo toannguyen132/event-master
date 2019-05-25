@@ -16,8 +16,6 @@ class Login extends Component {
     const {login} = this.props
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        console.log('Received values of form: ', values);
-        console.log('type of ', typeof login)
         login({
           email: values.email,
           password: values.password
@@ -70,9 +68,8 @@ class Login extends Component {
 Login.getInitialProps = async function(ctx) {
   initialize(ctx)
   // const token = ctx.store.getState().authentication.token
-  requireNotAuth(ctx)
+  // requireNotAuth(ctx)
 
-  console.log(ctx.store.getState().authentication)
   return {
 
   }

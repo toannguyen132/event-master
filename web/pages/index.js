@@ -2,12 +2,12 @@ import React  from 'react'
 import Layout from '../components/Layout'
 import { connect } from 'react-redux'
 import eventActions from '../redux/actions/event'
-import initialize from '../utils/initialize';
+import initialize from '../utils/initialize'
 
 
 class IndexPage extends React.Component {
   static async getInitialProps(ctx) {
-    // initialize(ctx)
+    initialize(ctx)
 
     await ctx.store.dispatch(eventActions.fetchEvent())
 

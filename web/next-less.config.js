@@ -38,7 +38,6 @@ module.exports = (nextConfig = {}) => {
         use: options.defaultLoaders.less
       })
 
-      // 我们禁用了antd的cssModules
       config.module.rules.push({
         test: /\.less$/,
         include: /node_modules/,

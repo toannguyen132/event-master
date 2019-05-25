@@ -1,4 +1,3 @@
-import React  from 'react'
 import styled from 'styled-components'
 
 const FloatingForm = styled.div`
@@ -9,6 +8,6 @@ const FloatingForm = styled.div`
   margin-left: auto;
   margin-right: auto;
   border-radius: 5px;
-`;
+`
 
-export default FloatingForm;
+export default FloatingForm

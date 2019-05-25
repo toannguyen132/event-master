@@ -7,6 +7,7 @@ module.exports = () => {
   const lessToJS = require('less-vars-to-js')
   const fs = require('fs')
   const path = require('path')
+  const withLess = require('@zeit/next-less')
 
   const dev = process.env.NODE_ENV !== 'production'
   const withLessExcludeAntd = require("./next-less.config.js")
@@ -21,7 +22,7 @@ module.exports = () => {
     require.extensions['.less'] = file => {}
   }
 
-  return withLessExcludeAntd({
+  return withLess(withLessExcludeAntd({
     cssModules: true,
     cssLoaderOptions: {
       importLoaders: 1,
@@ -36,6 +37,6 @@ module.exports = () => {
 
       return config
     }
-  })
+  }))
 
 };

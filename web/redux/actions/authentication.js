@@ -7,7 +7,7 @@ import authApi from '../../api/auth'
 /**
  * NORMAL ACTIONS
  */
-const setAuthToken = token => {
+export const setAuthToken = token => {
   return {
     type: AUTHENTICATE,
     payload: token
@@ -18,11 +18,11 @@ const setAuthToken = token => {
  * ASYNC Action
  */
 // gets token from the api and stores it in the redux store and in cookie
-const authenticate = ({ email, password }) => {
+export const authenticate = ({ email, password }) => {
   return async (dispatch) => {
     const token = 'test-token'
     // login
-    const api = createApi();
+    const api = createApi()
 
     try {
       const resp = await authApi.login(api, {email, password})
@@ -36,14 +36,14 @@ const authenticate = ({ email, password }) => {
 }
 
 // gets the token from the cookie and saves it in the store
-const reauthenticate = (token) => {
+export const reauthenticate = (token) => {
   return (dispatch) => {
     dispatch(setAuthToken(token))
   }
 }
 
 // removing the token
-const deauthenticate = () => {
+export const deauthenticate = () => {
   return (dispatch) => {
     removeCookie('token')
     Router.push('/')

@@ -1,12 +1,13 @@
 const APIError = require('../../helpers/APIError');
 const User = require('../../models/user');
+const model = require('../../helpers/model')
 
 const get = async (req, res, next) => {
 
 }
 
 const profile = async (req, res, next) => {
-  res.json(req.user);
+  res.json(model.getResponseUser(req.user));
 }
 
 const update = async(req, res, next) => {
@@ -24,7 +25,7 @@ const update = async(req, res, next) => {
   // save info to database
   await user.save();
 
-  res.json(user);
+  res.json(model.getResponseUser(user));
 }
 
 module.exports = { profile, update };

@@ -16,7 +16,7 @@ const setEvents = events => {
  * ASYNC Action
  */
 const fetchEvent = () => {
-  return async (dispatch, getState) => {
+  return async (dispatch) => {
     const api = apiGenerator()
 
     try{

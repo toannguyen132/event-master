@@ -61,10 +61,10 @@ app
     /** route **/
     // require auth
     server.get('/login', [requireNotAuth], (req, res) => {
-      return app.render(req, res, '/login', req.query);
-    });
+      return app.render(req, res, '/login', req.query)
+    })
 
-    server.get('*', (req, res) => {
+    server.get('*', (req, res) => {Z
       return handle(req, res)
     })
 
