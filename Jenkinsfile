@@ -10,7 +10,8 @@ pipeline {
     stage('Build') {
       steps {
         dir(path: 'api') {
-          sh 'yarn install'
+          sh '''node -v
+npm 0v'''
         }
 
       }
