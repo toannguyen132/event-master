@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const api = (token = '') => axios.create({
-  baseURL: 'http://localhost:3000/api',
+  baseURL: `${process.env.API_HOST}/api`,
   headers: {
     'x-access-token': token
   }
