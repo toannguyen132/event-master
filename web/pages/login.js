@@ -7,7 +7,7 @@ import Layout from '../components/Layout'
 import FloatingForm from '../components/FloatingForm'
 import authActions  from '../redux/actions/authentication'
 import initialize from '../utils/initialize';
-import { requireNotAuth } from '../utils/auth';
+import Router from 'next/router'
 
 class Login extends Component {
 
@@ -19,6 +19,8 @@ class Login extends Component {
         login({
           email: values.email,
           password: values.password
+        }).then(() => {
+          Router.push('/profile')
         })
       }
     });

@@ -5,8 +5,13 @@ import Wrapper, { FloatedContent } from '../../components/Layout'
 import Link from 'next/link'
 import {display, TYPE_DATE} from '../../utils/display'
 import { Button } from 'antd'
+import { deauthenticate } from '../../redux/actions/authentication'
 
 class Index extends Component {
+
+  handleLogout = (e) => {
+    this.props.logout()
+  }
 
   render() {
     const currentUser = this.props.currentUser
@@ -22,8 +27,9 @@ class Index extends Component {
 
           <section>
             <Link href="/profile/update">
-              <Button>Update profile</Button>
+              <Button type="primary">Update profile</Button>
             </Link>
+            <Button style={{marginLeft: '20px'}} onClick={this.handleLogout}>Log Out</Button>
           </section>
         </FloatedContent>
       </Wrapper>
@@ -43,7 +49,8 @@ const mapStateToProps = ({authentication, user}) => ({
   currentUser: user.currentUser
 })
 const mapDispatchToProps = dispatch => ({
+  logout: () => dispatch(deauthenticate())
 })
 
 
-export default connect(mapStateToProps, null)(Index)
+export default connect(mapStateToProps, mapDispatchToProps)(Index)

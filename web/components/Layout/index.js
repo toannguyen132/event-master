@@ -1,7 +1,6 @@
 import Header from '../Header'
 import {Layout } from "antd"
 import styled from 'styled-components'
-import '../../assets/style.less'
 
 const LayoutContent = Layout.Content
 

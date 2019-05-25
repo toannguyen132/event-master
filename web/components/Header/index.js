@@ -58,16 +58,11 @@ const LayoutHeader = ({currentUser, isLoggedIn}) => {
       label: 'Home',
       link: '/'
     },
-      {
-        key: 'profile',
-        label: 'Profile',
-        link: '/profile'
-      },
-      {
-        key: 'create-event',
-        label: 'Create Event',
-        link: '/create-event'
-      }]
+    {
+      key: 'profile',
+      label: 'Login',
+      link: '/login'
+    }]
   }
 
   return (
