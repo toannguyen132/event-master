@@ -64,7 +64,7 @@ app
       return app.render(req, res, '/login', req.query)
     })
 
-    server.get('*', (req, res) => {Z
+    server.get('*', (req, res) => {
       return handle(req, res)
     })
 
