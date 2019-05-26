@@ -1,19 +1,17 @@
 pipeline {
-  agent {
-    docker {
-      image 'node:12-alpine'
-      args '-p 3000:3000'
-    }
-
-  }
+  agent any
   stages {
     stage('Build') {
       steps {
-        dir(path: 'api') {
-          sh '''node -v
-npm -v'''
+        dir(path: '/var/www/jenkins/event-master/api') {
+          sh 'yarn install'
         }
 
+      }
+    }
+    stage('Deploy') {
+      steps {
+        sh 'pm2 restart all'
       }
     }
   }
