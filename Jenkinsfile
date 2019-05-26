@@ -22,12 +22,14 @@ yarn install'''
 yarn build'''
         }
 
+        echo 'Done'
       }
     }
     stage('Deploy web') {
       steps {
         sh '''pm2 restart web
 echo "Done"'''
+        echo 'Done'
       }
     }
   }
