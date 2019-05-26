@@ -3,13 +3,16 @@ pipeline {
   stages {
     stage('Build') {
       steps {
-        sh '''whoami
-pwd'''
+        dir(path: '/var/www/jenkins/event-master/api') {
+          sh '''git pull
+yarn install'''
+        }
+
       }
     }
     stage('Deploy') {
       steps {
-        sh 'pm2 restart all'
+        sh 'pm2 restart api'
       }
     }
   }
