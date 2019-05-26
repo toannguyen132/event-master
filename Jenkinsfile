@@ -27,8 +27,7 @@ yarn build'''
     }
     stage('Deploy web') {
       steps {
-        sh '''pm2 restart web
-echo "Done"'''
+        sh '''pm2 restart web'''
         echo 'Done'
       }
     }
