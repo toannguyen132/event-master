@@ -15,5 +15,19 @@ yarn install'''
         sh 'pm2 restart api'
       }
     }
+    stage('Build web') {
+      steps {
+        dir(path: '/var/www/jenkins/event-master') {
+          sh '''yarn install
+yarn build'''
+        }
+
+      }
+    }
+    stage('Deploy web') {
+      steps {
+        sh 'pm2 restart web'
+      }
+    }
   }
 }
