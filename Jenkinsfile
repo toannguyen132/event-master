@@ -17,7 +17,7 @@ yarn install'''
     }
     stage('Build web') {
       steps {
-        dir(path: '/var/www/jenkins/event-master') {
+        dir(path: '/var/www/jenkins/event-master/web') {
           sh '''yarn install
 yarn build'''
         }
@@ -26,7 +26,8 @@ yarn build'''
     }
     stage('Deploy web') {
       steps {
-        sh 'pm2 restart web'
+        sh '''pm2 restart web
+echo "Done"'''
       }
     }
   }
