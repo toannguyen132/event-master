@@ -4,7 +4,8 @@ pipeline {
     stage('Build') {
       steps {
         dir(path: '/var/www/jenkins/event-master/api') {
-          sh 'yarn install'
+          sh '''pwd
+yarn install'''
         }
 
       }
