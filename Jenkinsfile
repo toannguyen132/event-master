@@ -11,7 +11,7 @@ pipeline {
       steps {
         dir(path: 'api') {
           sh '''node -v
-npm 0v'''
+npm -v'''
         }
 
       }
