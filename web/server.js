@@ -26,7 +26,7 @@ const devProxy = {
  */
 const requireNotAuth = (req, res, next) => {
   if (req.cookies.token) {
-    console.log('already login, redirect to home')
+    console.error('already login, redirect to home')
     res.redirect('/')
   }
   next()
@@ -34,7 +34,7 @@ const requireNotAuth = (req, res, next) => {
 
 const requireAuth = (req, res, next) => {
   if (!req.cookies.token) {
-    console.log('require auth, redirect to login')
+    console.error('require auth, redirect to login')
     res.redirect('/login')
   }
   next()
@@ -62,6 +62,10 @@ app
     // require auth
     server.get('/login', [requireNotAuth], (req, res) => {
       return app.render(req, res, '/login', req.query)
+    })
+
+    server.get(/\/(profile|event\/create)/, [requireAuth], (req, res) => {
+      return handle(req, res)
     })
 
     server.get('*', (req, res) => {

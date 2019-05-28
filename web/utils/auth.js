@@ -19,6 +19,7 @@ export const requireNotAuth = (ctx) => {
 export const requireAuth = (ctx) => {
   const token = getCookie('token', ctx.req)
   if (!token) {
+    const {res} = ctx
     if (res) {
       res.writeHead(302, {
         Location: 'http://example.com'

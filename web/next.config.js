@@ -10,7 +10,7 @@ module.exports = () => {
   const path = require('path')
 
   const dev = process.env.NODE_ENV !== 'production'
-  const withLessExcludeAntd = require("./next-less.config.js")
+  // const withLessExcludeAntd = require("./next-less.config.js")
 
   // Where your antd-custom.less file lives
   const themeVariables = lessToJS(
