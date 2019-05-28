@@ -5,7 +5,7 @@ import Wrapper, { FloatedContent } from '../../components/Layout'
 import Link from 'next/link'
 import { Button } from 'antd'
 import { deauthenticate } from '../../redux/actions/authentication'
-import FloatingForm from '../components/FloatingForm'
+import FloatingForm from '../../components/FloatingForm'
 
 
 class CreateEvent extends Component {
