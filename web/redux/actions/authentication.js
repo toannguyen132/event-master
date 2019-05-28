@@ -4,7 +4,7 @@ import { setCookie, removeCookie } from '../../utils/cookie'
 import createApi from '../../api'
 import authApi from '../../api/auth'
 import { setGlobalMessage, setGlobalError } from './common'
-import { message } from 'antd';
+import { message } from 'antd'
 
 /**
  * NORMAL ACTIONS

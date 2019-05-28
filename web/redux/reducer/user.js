@@ -17,11 +17,11 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch(action.type) {
-    case SET_USER:
-      return { user: action.payload }
-    case SET_CURRENT_USER:
-      return { currentUser: action.payload }
-    default:
-      return state
+  case SET_USER:
+    return { user: action.payload }
+  case SET_CURRENT_USER:
+    return { currentUser: action.payload }
+  default:
+    return state
   }
 }

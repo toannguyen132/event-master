@@ -2,7 +2,7 @@ import Header from '../Header'
 import {Layout, message } from 'antd'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 
 const LayoutContent = Layout.Content
 

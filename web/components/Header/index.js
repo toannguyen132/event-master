@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { Avatar } from 'antd'
 import styled from 'styled-components'
 import { Menu } from 'antd'
+import urls from '../../model/urls'
 
 const HeaderContainer = styled.div`
   display: flex;
@@ -42,33 +43,33 @@ const LayoutHeader = ({currentUser, isLoggedIn}) => {
     links = [{
       key: 'home',
       label: 'Home',
-      link: '/'
+      link: urls.home
     },
     {
       key: 'profile',
       label: 'Profile',
-      link: '/profile'
+      link: urls.profile
     },
     {
       key: 'create-event',
       label: 'Create Event',
-      link: '/create-event'
+      link: urls.eventCreate
     }]
   } else {
     links = [{
       key: 'home',
       label: 'Home',
-      link: '/'
+      link: urls.home
     },
     {
       key: 'login',
       label: 'Login',
-      link: '/login'
+      link: urls.login
     },
     {
       key: 'register',
       label: 'Register',
-      link: '/register'
+      link: urls.register
     }]
   }
 
