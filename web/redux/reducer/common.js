@@ -7,11 +7,11 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch(action.type) {
-    case SET_ERROR:
-      return { error: action.payload }
-    case SET_MESSAGE:
-      return { message: action.payload }
-    default:
-      return state
+  case SET_ERROR:
+    return { error: action.payload }
+  case SET_MESSAGE:
+    return { message: action.payload }
+  default:
+    return state
   }
 }

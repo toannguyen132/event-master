@@ -3,6 +3,7 @@ require('dotenv').config()
 module.exports = () => {
 
   /* eslint-disable */
+  const withLess = require('@zeit/next-less')
   const webpack = require('webpack')
   const lessToJS = require('less-vars-to-js')
   const fs = require('fs')
@@ -21,12 +22,12 @@ module.exports = () => {
     require.extensions['.less'] = file => {}
   }
 
-  return withLessExcludeAntd({
-    cssModules: true,
-    cssLoaderOptions: {
-      importLoaders: 1,
-      localIdentName: "[local]___[hash:base64:5]",
-    },
+  return withLess({
+    // cssModules: true,
+    // cssLoaderOptions: {
+    //   importLoaders: 1,
+    //   localIdentName: "[local]___[hash:base64:5]",
+    // },
     lessLoaderOptions: {
       javascriptEnabled: true,
       modifyVars: themeVariables

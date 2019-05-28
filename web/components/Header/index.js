@@ -2,25 +2,27 @@ import Link from 'next/link'
 import { connect } from 'react-redux'
 import { Avatar } from 'antd'
 import styled from 'styled-components'
-import { Layout, Menu } from "antd"
-const { Header } = Layout
+import { Menu } from 'antd'
 
-const HeaderContainer = styled(Header)`
-  background-color: #445362;
+const HeaderContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: #fff;
+  color: #2d2d2d;
+  background: #fff;
   padding: 0 50px;
   
   .ant-menu {
     background-color: transparent !important;
     a{
-      color: #fff;
+      color: #2d2d2d;
       cursor: pointer;
     }
     .ant-menu-item-selected{
       background-color: rgba(0,0,0,0.2);
+    }
+    &.ant-menu-horizontal{
+      border-bottom: 0;
     }
   }
   
@@ -32,10 +34,10 @@ const HeaderContainer = styled(Header)`
    }
 `
 
-const welcomeName = name => `Welcome, ${name ? name : "User" }`
+const welcomeName = name => `Welcome, ${name ? name : 'User' }`
 
 const LayoutHeader = ({currentUser, isLoggedIn}) => {
-  let links = [];
+  let links = []
   if (isLoggedIn) {
     links = [{
       key: 'home',
@@ -59,32 +61,37 @@ const LayoutHeader = ({currentUser, isLoggedIn}) => {
       link: '/'
     },
     {
-      key: 'profile',
+      key: 'login',
       label: 'Login',
       link: '/login'
+    },
+    {
+      key: 'register',
+      label: 'Register',
+      link: '/register'
     }]
   }
 
   return (
-  <HeaderContainer>
-    <Menu
-      theme="dark"
-      mode="horizontal"
-    >
-      {links.map(({key, label, link}) => (
-        <Menu.Item key={key}>
-          <Link href={link}>
-            <a>{label}</a>
-          </Link>
-        </Menu.Item>
-      ))}
-    </Menu>
-    <div className="header-right">
-      <span className='username'>{ isLoggedIn ? welcomeName(currentUser.name) : 'Welcome, Guest'}</span>
-      <Avatar size={35} />
-    </div>
-  </HeaderContainer>
-)}
+    <HeaderContainer>
+      <Menu
+        mode="horizontal"
+      >
+        {links.map(({key, label, link}) => (
+          <Menu.Item key={key}>
+            <Link href={link}>
+              <a>{label}</a>
+            </Link>
+          </Menu.Item>
+        ))}
+      </Menu>
+      <div className="header-right">
+        <span className='username'>{ isLoggedIn ? welcomeName(currentUser.name) : 'Welcome, Guest'}</span>
+        <Avatar size={35} />
+      </div>
+    </HeaderContainer>
+  )
+}
 
 export default connect(
   ({user, authentication}) => ({

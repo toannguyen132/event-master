@@ -20,10 +20,10 @@ class Index extends Component {
       <Wrapper>
         <FloatedContent>
           <h1>Current user</h1>
-          <p>Name: {display(name)}</p>
-          <p>Email: {display(email)}</p>
-          <p>DoB: {display(dob, TYPE_DATE)}</p>
-          <p>Name: {display(address)}</p>
+          <p><strong>Name</strong>: {display(name)}</p>
+          <p><strong>Email</strong>: {display(email)}</p>
+          <p><strong>Birthday</strong>: {display(dob, TYPE_DATE)}</p>
+          <p><strong>Address</strong>: {display(address)}</p>
 
           <section>
             <Link href="/profile/update">

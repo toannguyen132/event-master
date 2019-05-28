@@ -4,7 +4,6 @@ import { connect } from 'react-redux'
 import eventActions from '../redux/actions/event'
 import initialize from '../utils/initialize'
 
-
 class IndexPage extends React.Component {
   static async getInitialProps(ctx) {
     initialize(ctx)

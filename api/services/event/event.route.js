@@ -15,12 +15,15 @@ router.route('/')
 router.route('/:id')
   .get(eventCtrl.get);
 
+/** create new event */
 router.route('/')
   .post([isAuth, validate(paramValidation.createEvent)], eventCtrl.create);
 
+/** update event */
 router.route('/:id')
   .put([isAuth, validate(paramValidation.updateEvent)], eventCtrl.update);
 
+/** upload an image to a single event */
 router.route('/:id/upload')
   .post([isAuth, validate(paramValidation.uploadEvent), upload.single('image')], eventCtrl.upload);
 

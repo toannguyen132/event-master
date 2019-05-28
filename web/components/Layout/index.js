@@ -1,6 +1,8 @@
 import Header from '../Header'
-import {Layout } from "antd"
+import {Layout, message } from 'antd'
 import styled from 'styled-components'
+import { connect } from 'react-redux'
+import React, { Component } from 'react';
 
 const LayoutContent = Layout.Content
 
@@ -15,14 +17,28 @@ export const FloatedContent = styled.div`
   box-shadow: 5px 5px 10px #efefef;
 `
 
-const Component = props => (
-  <Layout className="wrapper layout">
-    <Header />
-    <Content>
-      {props.children}
-    </Content>
-  </Layout>
-)
+class MasterLayout extends Component{
+  // componentDidMount() {
+  //   if (this.props.message) {
+  //     message.success(this.props.message)
+  //   }
+  // }
+  render() {
+    const props = this.props
+    return (
+      <Layout className="wrapper layout">
+        <Header />
+        <Content>
+          {props.children}
+        </Content>
+      </Layout>
+    )
+  }
+}
 
+const mapStateToProps = ({common}) => ({
+  error: common.error,
+  message: common.message
+})
 
-export default Component
+export default connect(mapStateToProps, null)(MasterLayout)

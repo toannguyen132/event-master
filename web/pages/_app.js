@@ -5,6 +5,7 @@ import Router from 'next/router'
 import withRedux from 'next-redux-wrapper'
 import { initStore } from '../redux'
 import { getProfile } from '../redux/actions/user'
+import { deauthenticate } from '../redux/actions/authentication'
 import Head from 'next/head'
 import initialize from '../utils/initialize'
 
