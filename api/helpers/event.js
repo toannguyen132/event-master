@@ -38,4 +38,10 @@ const refineResponseEvent = (event) => {
   return resp;
 }
 
-module.exports = { refineSearchParams, refineResponseEvent }
+const refineResponseCategory = category => ({
+  id: category._id,
+  name: category.name,
+  slug: category.slug
+})
+
+module.exports = { refineSearchParams, refineResponseEvent, refineResponseCategory }

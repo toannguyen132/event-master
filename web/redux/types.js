@@ -13,7 +13,7 @@ export const DEAUTHENTICATE = `${AUTH}_DEAUTHENTICATE`
 const EVENT = 'EVENT'
 export const SET_EVENTS = `${EVENT}_SET_EVENTS`
 export const SET_SINGLE_EVENT = `${EVENT}_SET_SINGLE_EVENT`
-
+export const SET_CATEGORIES = `${EVENT}_SET_CATEGORIES`
 
 const USER = 'USER'
 export const SET_USER = `${USER}_SET_USER`

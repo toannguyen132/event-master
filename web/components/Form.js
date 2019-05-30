@@ -1,8 +1,8 @@
 import React from 'react'
-import { Form, Input, Button, DatePicker, TimePicker } from 'antd'
+import { Form, Input, Button, DatePicker, Select } from 'antd'
 import { logInfo } from '../utils/log'
 import moment from 'moment'
-import { DATE_FORMAT, TIME_FORMAT } from '../utils/display'
+import { DATE_TIME_FORMAT } from '../utils/display'
 
 class GlobalForm extends React.Component {
 
@@ -14,10 +14,6 @@ class GlobalForm extends React.Component {
         this.props.onSubmit(values)
       }
     })
-  }
-
-  handleDatePickerUpdate = (e, value) => {
-    logInfo(e, value)
   }
 
   renderField = (item) => {
@@ -46,9 +42,25 @@ class GlobalForm extends React.Component {
       const value = item.defaultValue ? moment(item.defaultValue) : moment()
       return (
         <Form.Item key={item.name}>
-          <DatePicker onChange={this.handleDatePickerUpdate} defaultValue={value} format={DATE_FORMAT}></DatePicker>
-          &nbsp;&nbsp;&nbsp;
-          <TimePicker defaultValue={value} format={TIME_FORMAT}></TimePicker>
+          {getFieldDecorator(item.name, {
+            rules: [{ type: 'object', required: true, message: 'Please select time!' }],
+            initialValue:value || '',
+          })(<DatePicker showTime format={DATE_TIME_FORMAT}/>)}
+        </Form.Item>
+      )
+    case 'select':
+      return (
+        <Form.Item key={item.name}>
+          {getFieldDecorator(item.name, {
+            rules: item.rules,
+            initialValue: item.defaultValue || item.options.length > 0 ? item.options[0].id : null,
+          })(
+            <Select placeholder={item.label}>
+              {item.options.map(opt => (
+                <Select.Option key={opt.id} value={opt.id}>{opt.name}</Select.Option>
+              ))}
+            </Select>
+          )}
         </Form.Item>
       )
     case 'text':

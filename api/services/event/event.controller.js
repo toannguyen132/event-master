@@ -2,6 +2,7 @@
 const APIError = require('../../helpers/APIError');
 // const config = require('../../config/config');
 const Event = require('../../models/event');
+const Category = require('../../models/category');
 const eventHelper = require('../../helpers/event');
 const fs = require('fs');
 
@@ -130,6 +131,22 @@ const upload = async (req, res, next) => {
   }
 }
 
+/**
+ * Retrieve event categories
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ */
+const getCategories = async (req, res, next) => {
+  try{
+    const categories = await Category.find();
+    const respCategories = categories.map(cat => eventHelper.refineResponseCategory(cat))
+    res.json(respCategories)
+  } catch(e) {
+    next(e);
+  }
+}
+
 const createTest = (req, res, next) => {
   console.log(req.body);
   console.log(req.file);
@@ -138,4 +155,4 @@ const createTest = (req, res, next) => {
 }
 
 
-module.exports = { search, get, create, update, upload, createTest };
+module.exports = { search, get, create, update, upload, createTest, getCategories };

@@ -8,10 +8,15 @@ const upload = require('../../config/upload')
 
 const router = express.Router(); // eslint-disable-line new-cap
 
-/** POST /api/auth/login - Returns token if correct username and password is provided */
+/** search events */
 router.route('/')
   .get(eventCtrl.search);
 
+/** get event categories */
+router.route('/category')
+  .get(eventCtrl.getCategories);
+
+/** get single event */
 router.route('/:id')
   .get(eventCtrl.get);
 
@@ -26,6 +31,7 @@ router.route('/:id')
 /** upload an image to a single event */
 router.route('/:id/upload')
   .post([isAuth, validate(paramValidation.uploadEvent), upload.single('image')], eventCtrl.upload);
+
 
 router.route('/test')
   .post([isAuth, upload.single('image')], eventCtrl.createTest);

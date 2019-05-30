@@ -10,6 +10,7 @@ export const types = {
 
 export const DATE_FORMAT = 'MMM DD, YYYY'
 export const TIME_FORMAT = 'HH:mm'
+export const DATE_TIME_FORMAT = 'MMM DD, YYYY - HH:mm'
 
 export const displayFallback = (value) => {
   if (typeof value === 'undefined') {

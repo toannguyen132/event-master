@@ -21,7 +21,10 @@ export const eventForm = [
     name: 'category',
     label: 'Category',
     rules: [{ required: true, message: 'Please select a category' }],
-    type: 'category',
+    type: 'select',
+    options: [],
+    keyLabel: 'name',
+    keyValue: 'id',
   },
   {
     name: 'startDate',
@@ -43,6 +46,18 @@ export const mergeDefaultValue = (forms, data) => {
       return {
         ...options,
         defaultValue: data[options.name]
+      }
+    }
+    return {...options}
+  })
+}
+
+export const mergeOptions = (forms, data) => {
+  return forms.map(({...options})=> {
+    if (data[options.name]){
+      return {
+        ...options,
+        ...data[options.name]
       }
     }
     return {...options}
