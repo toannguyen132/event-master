@@ -25,7 +25,7 @@ const upload = async (req, res, next) => {
 
   } catch (e) {
     console.log(e);
-    next(e);
+    next(new APIError(e.message));
   }
 }
 
@@ -46,7 +46,7 @@ const deleteUpload = async (req, res, next) => {
     })
   } catch (e) {
     console.log(e);
-    next(e);
+    next(new APIError(e.message));
   }
 }
 
