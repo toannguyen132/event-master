@@ -3,8 +3,9 @@ import { AUTHENTICATE, DEAUTHENTICATE } from '../types'
 import { setCookie, removeCookie } from '../../utils/cookie'
 import createApi from '../../api'
 import authApi from '../../api/auth'
-import { setGlobalMessage, setGlobalError } from './common'
 import { message } from 'antd'
+import { logInfo } from '../../utils/log'
+import _ from 'lodash'
 
 /**
  * NORMAL ACTIONS
@@ -54,7 +55,7 @@ export const deauthenticate = () => {
 }
 
 export const register = ({name, email, password}) => {
-  return async (dispatch) => {
+  return async () => {
     const api = createApi()
 
     try{
@@ -63,9 +64,9 @@ export const register = ({name, email, password}) => {
       message.success('You have been registered successfully')
       Promise.resolve(newUser)
     } catch (e) {
-      message.error('An error was occured: ${e.message}')
-      // dispatch(setGlobalError(`An error was occured: ${e.message}`))
-      return Promise.reject(e.message)
+      const msg = _.get(e, 'response.data.message', e.message)
+      message.error(`An error was occured: ${msg}`)
+      return Promise.reject(msg)
     }
   }
 }

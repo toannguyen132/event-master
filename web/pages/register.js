@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React, { Component } from 'react'
-import { Form, Input, Icon, Button } from 'antd'
+import { Form, Input, Icon, Button, message } from 'antd'
 import { connect } from 'react-redux'
 import Link  from 'next/link'
 import Layout from '../components/Layout'
@@ -8,6 +8,7 @@ import FloatingForm from '../components/FloatingForm'
 import authActions  from '../redux/actions/authentication'
 import initialize from '../utils/initialize';
 import Router from 'next/router'
+import { logInfo } from '../utils/log';
 
 class Register extends Component {
 
@@ -21,7 +22,10 @@ class Register extends Component {
           email: values.email,
           password: values.password
         }).then(() => {
+          message.error("You have been registered successfully!")
           Router.push('/login')
+        }).catch((msg) => {
+          message.error(msg)
         })
       }
     });

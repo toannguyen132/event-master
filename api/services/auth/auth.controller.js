@@ -12,6 +12,11 @@ const encrypt = require('../../helpers/encrypt');
  * @param next
  */
 function register(req, res, next) {
+  // remove register on production
+  if (process.env.NODE_ENV === 'production'){
+    res.status(400).json({message: 'Register is closed'});
+  }
+
   const hashedPassword = encrypt.hashPassword(req.body.password);
   const newUser = new User({
     name: req.body.name,
