@@ -1,8 +1,10 @@
 import React from 'react'
 import { Form, Input, Button, DatePicker, Select } from 'antd'
-import { logInfo } from '../utils/log'
 import moment from 'moment'
 import { DATE_TIME_FORMAT } from '../utils/display'
+import FieldUpload from '../components/FieldUpload'
+
+const {RangePicker} = DatePicker
 
 class GlobalForm extends React.Component {
 
@@ -45,7 +47,23 @@ class GlobalForm extends React.Component {
           {getFieldDecorator(item.name, {
             rules: [{ type: 'object', required: true, message: 'Please select time!' }],
             initialValue:value || '',
-          })(<DatePicker showTime format={DATE_TIME_FORMAT}/>)}
+          })(<DatePicker showTime={{format: 'HH:mm'}} format={DATE_TIME_FORMAT}/>)}
+        </Form.Item>
+      )
+    case 'dateTimeRange':
+      // eslint-disable-next-line no-case-declarations
+      // const value = item.defaultValue ? moment(item.defaultValue) : moment()
+      return (
+        <Form.Item key={item.name}>
+          {getFieldDecorator(item.name, {
+            rules: item.rules
+          })(
+            <RangePicker 
+              showTime={{format: 'HH:mm'}}
+              placeholder={item.label}
+              format={DATE_TIME_FORMAT}
+            />
+          )}
         </Form.Item>
       )
     case 'select':
@@ -60,6 +78,17 @@ class GlobalForm extends React.Component {
                 <Select.Option key={opt.id} value={opt.id}>{opt.name}</Select.Option>
               ))}
             </Select>
+          )}
+        </Form.Item>
+      )
+    case 'upload':
+      return(
+        <Form.Item key={item.name}>
+          {getFieldDecorator(item.name, {
+            rules: item.rules,
+            initialValue: item.defaultValue || null,
+          })(
+            <FieldUpload />
           )}
         </Form.Item>
       )

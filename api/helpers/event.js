@@ -28,6 +28,11 @@ const refineResponseEvent = (event) => {
       name: cat.name,
       slug: cat.slug,
     })),
+    owner: event.owner ? {
+      name: event.owner.name,
+      email: event.owner.email,
+      id: event.owner._id,
+    } : null,
     startDate: event.startDate,
     endDate: event.endDate,
     image: event.image,

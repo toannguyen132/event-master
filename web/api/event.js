@@ -3,13 +3,14 @@ export const search = (api) => {
   return api.get('/event')
 }
 
-export const create = (api, {name, description, startDate, endDate, location}) => {
+export const create = (api, {name, description, startDate, endDate, location, image}) => {
   return api.post('/event', {
     name, 
     description, 
     startDate, 
     endDate, 
-    location
+    location,
+    image
   })
 }
 

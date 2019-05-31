@@ -56,8 +56,10 @@ const create = (req, res, next) => {
     location: rawEvent.location,
     startDate: rawEvent.startDate,
     endDate: rawEvent.endDate,
+    image: rawEvent.image,
     category: rawEvent.category || [],
-    tickets: rawEvent.tickets || []
+    tickets: rawEvent.tickets || [],
+    owner: req.user.id
   });
 
   event.save().then(() => {
@@ -109,10 +111,7 @@ const update = async (req, res, next) => {
 const upload = async (req, res, next) => {
   try {
     const event = await Event.get(req.params.id);
-
     const oldImage = event.image;
-
-    console.log(req.file);
 
     // save new image
     event.image = req.file.filename;
@@ -126,6 +125,28 @@ const upload = async (req, res, next) => {
     res.json( eventHelper.refineResponseEvent(result))
 
   } catch (e) {
+    console.log(e);
+    next(e);
+  }
+}
+
+/**
+ * create empty event and upload
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
+const initUpload = async(req, res, next) => {
+  try{
+    const event = new Event({
+      image: req.file.filename,
+      owner: req.user._id,
+      status: 'draft'
+    })
+    const createdEvent = await event.save({validateBeforeSave: false})
+    const returnEvent = await Event.get(createdEvent._id)
+    res.json(eventHelper.refineResponseEvent(returnEvent));
+  } catch(e) {
     console.log(e);
     next(e);
   }
@@ -154,5 +175,4 @@ const createTest = (req, res, next) => {
   res.json(req.body);
 }
 
-
-module.exports = { search, get, create, update, upload, createTest, getCategories };
+module.exports = { search, get, create, update, upload, createTest, getCategories, initUpload };

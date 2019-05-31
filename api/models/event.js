@@ -29,7 +29,7 @@ const TicketTypeSchema = new mongoose.Schema({
     type: Number,
     default: -1
   },
-  leftOver: {
+  available: {
     type: Number,
     default: -1
   }
@@ -64,7 +64,13 @@ const EventSchema = new mongoose.Schema({
   },
   tickets: [TicketTypeSchema],
   category: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Category'}],
-  image: String,
+  image: [{ type: mongoose.Schema.Types.ObjectId, ref: 'File'}],
+  status: {
+    type: String,
+    enum: ['draft', 'public'],
+    default: 'public'
+  },
+  owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User'},
   createdAt: {
     type: Date,
     index: true,
@@ -95,6 +101,8 @@ EventSchema.statics = {
   get(id) {
     return this.findById(id)
       .populate('category')
+      .populate('owner')
+      .populate('image')
       .exec()
       .then((item) => {
         if (item) {
@@ -103,6 +111,22 @@ EventSchema.statics = {
         const err = new APIError('No such event exists!', httpStatus.NOT_FOUND);
         return Promise.reject(err);
       });
+  },
+
+  /**
+   * create an empty event
+   */
+  createEmpty() {
+    return new Promise((resolve, reject) => {
+      const event = new Event({
+        status: 'draft'
+      });
+      event.save().then((createdEvent) => {
+        resolve(createdEvent);
+      }).catch(e => {
+        reject(reject)
+      })
+    })
   },
 
   /**
@@ -118,7 +142,9 @@ EventSchema.statics = {
       .sort({ startDate: 1, createdAt: -1 })
       .skip(+skip)
       .limit(+limit)
+      .populate('owner')
       .populate('category')
+      .populate('image')
       .exec();
   },
 

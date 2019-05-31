@@ -8,12 +8,16 @@ const port = parseInt(process.env.PORT, 10) || 3000
 const app = next({ dev })
 const handle = app.getRequestHandler()
 
-
 // proxy for calling api
 const devProxy = {
   '/api': {
     target: 'http://localhost:4000/api/',
     pathRewrite: { '^/api': '/' },
+    changeOrigin: true
+  },
+  '/uploads': {
+    target: 'http://localhost:4000/uploads/',
+    pathRewrite: { '^/uploads': '/' },
     changeOrigin: true
   }
 }

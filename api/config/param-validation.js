@@ -86,5 +86,17 @@ module.exports = {
       address: Joi.string(),
       phone: Joi.string()
     }
+  },
+
+  upload: {
+    params: {
+      type: Joi.string().valid('event', 'avatar')
+    },
+  },
+
+  deleteUpload: {
+    params: {
+      id: Joi.string().required()
+    },
   }
 };

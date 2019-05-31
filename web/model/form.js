@@ -1,6 +1,12 @@
 
 export const eventForm = [
   {
+    name: 'image',
+    label: 'Image',
+    rules: [{ required: true, message: 'Please upload image!' }],
+    type: 'upload'
+  },
+  {
     name: 'name',
     label: 'Name',
     rules: [{ required: true, message: 'Please input your name!' }],
@@ -27,17 +33,11 @@ export const eventForm = [
     keyValue: 'id',
   },
   {
-    name: 'startDate',
-    label: 'Start Date',
+    name: 'date',
     rules: [{ required: true, message: 'Please input start date' }],
-    type: 'datetimepicker'
-  },
-  {
-    name: 'endDate',
-    label: 'End Date',
-    rules: [{ required: true, message: 'Please input end date' }],
-    type: 'datetimepicker'
-  },
+    label: ['From Date', 'To Date'],
+    type: 'dateTimeRange',
+  }
 ]
 
 export const mergeDefaultValue = (forms, data) => {

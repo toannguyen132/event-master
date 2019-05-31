@@ -10,6 +10,7 @@ import moment from 'moment'
 import { createEvent, getCategories } from '../../redux/actions/event'
 import urls from '../../model/urls';
 import { message } from 'antd';
+import { logInfo } from '../../utils/log';
 
 const CreateForm = createForm({name: 'create-event'})
 
@@ -20,22 +21,28 @@ class CreateEvent extends Component {
   }
 
   handleSubmit = (values) => {
-    const {name, description, location, category} = values
+    const {name, description, location, category, date, image} = values
     const eventData = {
       name, 
       description,
       location,
       category,
-      startDate: values.startDate.format(),
-      endDate: values.endDate.format(),
+      startDate: date[0].format(),
+      endDate: date[1].format(),
+      image: image.id
     }
-    this.props.createEvent(values).then(() => {
+
+    logInfo('submitted data: ', eventData)
+
+    this.props.createEvent(eventData).then(() => {
       message.success("Event has been created");
       Router.push(urls.home)
     }).catch(e => {
       message.error(`Error has been occurred: ${e.message}`);
     });
   }
+
+
 
   render() {
 

@@ -32,6 +32,9 @@ router.route('/:id')
 router.route('/:id/upload')
   .post([isAuth, validate(paramValidation.uploadEvent), upload.single('image')], eventCtrl.upload);
 
+/** generate an event and upload image */
+router.route('/upload')
+  .post([isAuth, upload.single('image')], eventCtrl.initUpload);
 
 router.route('/test')
   .post([isAuth, upload.single('image')], eventCtrl.createTest);
