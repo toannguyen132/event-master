@@ -5,8 +5,8 @@ import Wrapper from '../../components/Layout'
 import { getEvent } from '../../redux/actions/event'
 import EventSingle from '../../components/EventSingle'
 import { message } from 'antd';
-import Router from 'next/router'
 import { logError } from '../../utils/log'
+import { redirect } from '../../utils/basic'
 
 class ShowEvent extends Component {
   render() {
@@ -36,7 +36,7 @@ ShowEvent.getInitialProps = async function(ctx) {
     } else {
       logError('normal error:', e.message)
     }
-    Router.push('/') // redirect to home
+    redirect('/', ctx) // redirect to home
   }
 }
 
