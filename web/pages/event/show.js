@@ -6,6 +6,7 @@ import { getEvent } from '../../redux/actions/event'
 import EventSingle from '../../components/EventSingle'
 import { message } from 'antd';
 import Router from 'next/router'
+import { logError } from '../../utils/log'
 
 class ShowEvent extends Component {
   render() {
