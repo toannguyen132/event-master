@@ -82,10 +82,12 @@ class EventSingle extends Component {
   }
 
   state = {  }
-  
+
   render() { 
     const { name, image, owner, description, location} = this.props.event
     const imageUrl = image && image.length > 0 ? `/uploads/${image[0].filename}` : defaultImage
+
+    console.log('event: ', this.props.event)
 
     return ( 
       <Wrapper>
@@ -96,7 +98,7 @@ class EventSingle extends Component {
           <Col span={8}>
             <HeadInfo>
               <h1 className="name">{name}</h1>
-              <p className="author">by <strong>{owner.name}</strong></p>
+              <p className="author">by <strong>{owner && owner.name || 'author'}</strong></p>
               <Button type="primary" size="large" block>Register</Button>
             </HeadInfo>
           </Col>
@@ -122,4 +124,4 @@ const mapStateToProps = ({event}) => ({
   event: event.currentEvent
 })
 
-export default connect(null, null)(EventSingle)
+export default connect(mapStateToProps, null)(EventSingle)

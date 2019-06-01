@@ -20,7 +20,7 @@ class ShowEvent extends Component {
 
 ShowEvent.getInitialProps = async function(ctx) {
   try {
-    const id = ctx.req.query.id || null
+    const id = ctx.query.id || null
     console.log('query id: ', id);
     if ( id ) {
       const event = await ctx.store.dispatch(getEvent(id))
