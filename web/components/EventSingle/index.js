@@ -84,8 +84,10 @@ class EventSingle extends Component {
   state = {  }
   render() { 
     const { name, image, owner, description, location} = this.props.event
-    const imageUrl = image.length > 0 ? `/uploads/${image[0].filename}` : defaultImage
+    const imageUrl = image && image.length > 0 ? `/uploads/${image[0].filename}` : defaultImage
+
     logInfo(imageUrl)
+
     return ( 
       <Wrapper>
         <Row type="flex">
@@ -121,4 +123,4 @@ const mapStateToProps = ({event}) => ({
   event: event.currentEvent
 })
 
-export default connect(mapStateToProps, null)(EventSingle)
+export default connect(null, null)(EventSingle)
