@@ -4,16 +4,26 @@ import { connect } from 'react-redux'
 import eventActions from '../redux/actions/event'
 import { Row, Col } from 'antd'
 import EventCard from '../components/EventCard'
+import { logError } from '../utils/log';
 
 
 class IndexPage extends React.Component {
 
   static async getInitialProps(ctx) {
-    const events = await ctx.store.dispatch(eventActions.fetchEvent())
+    try{
+      const events = await ctx.store.dispatch(eventActions.fetchEvent())
 
-    return {
-      events
+      return {
+        events
+      }
+    } catch (e) {
+      if (e.response) {
+        logError('Response error:', e.response.body)
+      } else {
+        logError('normal error:', e.message)
+      }
     }
+    
   }
 
   render() {
