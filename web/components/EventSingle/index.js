@@ -60,7 +60,11 @@ class EventSingle extends Component {
 
   static defaultProps = {
     event: {
-      name: 'Default Name'
+      name: 'Default Name',
+      image: [],
+      onwer: {
+        name: 'Owner name'
+      }
     }
   }
   
@@ -71,6 +75,9 @@ class EventSingle extends Component {
       description: PropTypes.string,
       startDate: PropTypes.string,
       endDate: PropTypes.string,
+      onwer: PropTypes.shape({
+        name: PropTypes.string
+      })
     }).isRequired
   }
 
