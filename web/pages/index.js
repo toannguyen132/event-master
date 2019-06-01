@@ -23,7 +23,7 @@ class IndexPage extends React.Component {
         <h1>Latest Events</h1>
         <Row gutter={20} type="flex">
           {events.map(event => (
-            <Col span={8} style={{display: 'flex', flexDirection: 'column'}}>
+            <Col key={event.id} span={8} style={{display: 'flex', flexDirection: 'column'}}>
               <EventCard event={event}/>
             </Col>
           ))}
