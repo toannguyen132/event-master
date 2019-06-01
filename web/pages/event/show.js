@@ -21,6 +21,7 @@ class ShowEvent extends Component {
 ShowEvent.getInitialProps = async function(ctx) {
   try {
     const id = ctx.req.query.id || null
+    console.log('query id: ', id);
     if ( id ) {
       const event = await ctx.store.dispatch(getEvent(id))
     
@@ -28,7 +29,7 @@ ShowEvent.getInitialProps = async function(ctx) {
         event
       }
     } else {
-      throw new Exception("Event is not existed")
+      throw new Error("Event is not existed")
     }
   } catch (e) {
     if (e.response) {
