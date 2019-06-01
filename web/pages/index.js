@@ -2,8 +2,8 @@ import React  from 'react'
 import Layout from '../components/Layout'
 import { connect } from 'react-redux'
 import eventActions from '../redux/actions/event'
-import moment from 'moment'
-import { DATE_FORMAT } from '../utils/display'
+import { Row, Col } from 'antd'
+import EventCard from '../components/EventCard'
 
 
 class IndexPage extends React.Component {
@@ -20,13 +20,14 @@ class IndexPage extends React.Component {
     const events = this.props.events || []
     return (
       <Layout>
-        <h1>Events</h1>
-        {console.log('call profile')}
-        <ul>
+        <h1>Latest Events</h1>
+        <Row gutter={20} type="flex">
           {events.map(event => (
-            <li key={event.id}>{event.name} - {moment(event.startDate).format(DATE_FORMAT)}</li>
+            <Col span={8} style={{display: 'flex', flexDirection: 'column'}}>
+              <EventCard event={event}/>
+            </Col>
           ))}
-        </ul>
+        </Row>
       </Layout>
     )
   }

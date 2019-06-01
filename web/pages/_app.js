@@ -8,6 +8,7 @@ import { getProfile } from '../redux/actions/user'
 import { deauthenticate } from '../redux/actions/authentication'
 import Head from 'next/head'
 import initialize from '../utils/initialize'
+import '../assets/less/style.less'
 
 const authPathRex = /^\/(profile|create-event)/
 const requireAuth = (path) => authPathRex.test(path)

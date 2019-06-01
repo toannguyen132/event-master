@@ -22,10 +22,8 @@ class Register extends Component {
           email: values.email,
           password: values.password
         }).then(() => {
-          message.error("You have been registered successfully!")
           Router.push('/login')
         }).catch((msg) => {
-          message.error(msg)
         })
       }
     });

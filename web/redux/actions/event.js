@@ -30,7 +30,7 @@ const setCategories = categories => {
 /**
  * ASYNC Action
  */
-export const fetchEvent = () => {
+export const searchEvents = () => {
   return async (dispatch) => {
     const api = apiGenerator()
 
@@ -80,10 +80,26 @@ export const getCategories = () => {
   }
 }
 
+export const getEvent = id => {
+  return async (dispatch) => {
+    const api = apiGenerator()
+
+    try{
+      const resp = await eventApi.fetch(api, id)
+      dispatch(setCurrentEvent(resp.data))
+      return resp.data
+    } catch (e) {
+      logError('error:', e.message)
+      logError('error stack:', e.stack)
+      throw e
+    }
+  }
+}
+
 
 export default {
   setEvents,
-  fetchEvent,
+  fetchEvent: searchEvents,
   createEvent,
   getCategories
 }

@@ -72,6 +72,12 @@ app
       return handle(req, res)
     })
 
+    server.get('/event/:id', (req, res) => {
+      // req.params.id = 
+      const queryParams = { ...req.query, id: req.params.id }
+      return app.render(req, res, '/event/show', queryParams)
+    })
+
     server.get('*', (req, res) => {
       return handle(req, res)
     })

@@ -136,7 +136,12 @@ EventSchema.statics = {
    * @returns {Promise<User[]>}
    */
   list({ s = "", startDate = new Date(), skip = 0, limit = 50 } = {}) {
-    const query = this.find()
+    const today = new Date()
+
+    // only search for future event
+    const query = this.find({
+      startDate: {$gt: today}
+    });
 
     return query
       .sort({ startDate: 1, createdAt: -1 })

@@ -14,6 +14,10 @@ export const create = (api, {name, description, startDate, endDate, location, im
   })
 }
 
+export const fetch = (api, id) => {
+  return api.get(`/event/${id}`)
+}
+
 export const uploadEventPhoto = (api, data) => {
   return api.post('/event/upload', data)
 }
@@ -26,5 +30,6 @@ export default {
   search,
   create,
   uploadEventPhoto,
-  getEventCategories
+  getEventCategories,
+  fetch
 }
