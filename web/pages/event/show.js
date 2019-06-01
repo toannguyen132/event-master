@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import Wrapper from '../../components/Layout'
 import { getEvent } from '../../redux/actions/event'
 import EventSingle from '../../components/EventSingle'
+import { message } from 'antd';
 
 class ShowEvent extends Component {
   render() {
@@ -17,12 +18,18 @@ class ShowEvent extends Component {
 
 ShowEvent.getInitialProps = async function(ctx) {
   try {
-    const id = ctx.req.params.id
-    const event = await ctx.store.dispatch(getEvent(id))
-    return {
-      event
+    const id = ctx.req.query.id || null
+    if ( id ) {
+      const event = await ctx.store.dispatch(getEvent(id))
+    
+      return {
+        event
+      }
+    } else {
+      throw new Exception("Event is not existed")
     }
   } catch (e) {
+    message.error(e.message);
     return {
       event: null
     }
