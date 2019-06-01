@@ -75,7 +75,6 @@ app
     server.get('/event/:id', (req, res) => {
       // req.params.id = 
       const queryParams = { ...req.query, id: req.params.id }
-      console.log('new query params', queryParams)
       return app.render(req, res, '/event/show', queryParams)
     })
 
