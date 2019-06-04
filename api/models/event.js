@@ -113,20 +113,13 @@ EventSchema.statics = {
       });
   },
 
-  /**
-   * create an empty event
-   */
-  createEmpty() {
-    return new Promise((resolve, reject) => {
-      const event = new Event({
-        status: 'draft'
-      });
-      event.save().then((createdEvent) => {
-        resolve(createdEvent);
-      }).catch(e => {
-        reject(reject)
-      })
-    })
+  getByOwner(id) {
+    return this.find({ owner: id})
+      .sort({ startDate: 1, createdAt: -1 })
+      .populate('category')
+      .populate('owner')
+      .populate('image')
+      .exec();
   },
 
   /**

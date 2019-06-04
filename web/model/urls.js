@@ -1,9 +1,13 @@
 
+
 export default {
   home: '/',
   login: '/login',
   register: '/register',
   profile: '/profile',
   profileEdit: '/profile/update',
-  eventCreate: '/event/create'
+  eventCreate: '/event/create',
+  myEvents: '/profile/events',
+  showEvent: (id) => `/event/show/${id}`,
+  showEventQuery: (id) => `/event/show/?id=${id}`
 }

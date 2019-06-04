@@ -59,7 +59,8 @@ const create = (req, res, next) => {
     image: rawEvent.image,
     category: rawEvent.category || [],
     tickets: rawEvent.tickets || [],
-    owner: req.user.id
+    owner: req.user.id,
+    status: 'public'
   });
 
   event.save().then(() => {

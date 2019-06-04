@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import moment from 'moment'
 import Router from 'next/router'
 import Link from 'next/link'
-
+import urls from '../model/urls'
 
 const defaultThumb = '/static/img/thumb.jpg'
 
@@ -15,7 +15,7 @@ const CardWrapper = styled.div`
   margin-bottom: 20px;
   background-color: #fff;
 `
-const CardThumbWrap = styled.a`
+const CardThumbWrap = styled.div`
   display: block;
   height: 0;
   padding-top: 50%;
@@ -39,6 +39,7 @@ const CardContent = styled.div`
       font-size: 1.3em;
       font-weight: 500;
       margin-top: 0;
+      cursor: pointer;
     }
   }
 `
@@ -79,20 +80,22 @@ class EventCard extends Component {
   }
 
   render() { 
-    const {startDate, name, location, image} = this.props.event
+    const {startDate, name, location, images, id} = this.props.event
     // logInfo(`event ${name} has ${image.length} images` )
-    const eventImage = image.length > 0 ? `/uploads/${image[0].filename}` : defaultThumb
-    const link = `/event/${this.props.event.id}`
+    const eventImage = images.length > 0 ? `/uploads/${images[0].filename}` : defaultThumb
+    const link = urls.showEvent(id)
 
     return ( 
       <CardWrapper>
-        <Link href={link}>
-          <CardThumb image={eventImage} />
+        <Link as={link} href={`/event/show/?id=${id}`}>
+          <div>
+            <CardThumb image={eventImage} />
+          </div>
         </Link>
         <CardContent>
           <Date date={startDate} />
           <div className="content">
-            <Link href={link}>
+            <Link as={link} href={`/event/show/?id=${id}`}>
               <h3>
                 {name}
               </h3>

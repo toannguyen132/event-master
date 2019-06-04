@@ -1,9 +1,10 @@
 import Link from 'next/link'
 import { connect } from 'react-redux'
-import { Avatar } from 'antd'
+import { Avatar, Dropdown } from 'antd'
 import styled from 'styled-components'
 import { Menu } from 'antd'
 import urls from '../../model/urls'
+import { deauthenticate } from '../../redux/actions/authentication'
 
 const HeaderContainer = styled.div`
   display: flex;
@@ -33,51 +34,51 @@ const HeaderContainer = styled.div`
       vertical-align: middle;
     }
    }
+
+  .user-dropdown{
+    cursor: pointer;
+    display: block;   
+  }
 `
 
-const welcomeName = name => `Welcome, ${name ? name : 'User' }`
+const welcomeName = name => `Hello, ${name ? name : 'User' }`
 
-const LayoutHeader = ({currentUser, isLoggedIn}) => {
-  let links = []
-  if (isLoggedIn) {
-    links = [{
-      key: 'home',
-      label: 'Home',
-      link: urls.home
-    },
-    {
-      key: 'profile',
-      label: 'Profile',
-      link: urls.profile
-    },
-    {
-      key: 'create-event',
-      label: 'Create Event',
-      link: urls.eventCreate
-    }]
-  } else {
-    links = [{
-      key: 'home',
-      label: 'Home',
-      link: urls.home
-    },
-    {
-      key: 'login',
-      label: 'Login',
-      link: urls.login
-    },
-    {
-      key: 'register',
-      label: 'Register',
-      link: urls.register
-    }]
-  }
+const LayoutHeader = ({currentUser, isLoggedIn, logout}) => {
+  let links = [{
+    key: 'home',
+    label: 'Event Master',
+    link: urls.home
+  }]
+  
+  const UserMenu = (
+    <Menu>
+      <Menu.Item key="0">
+        <Link href={urls.profile}><a>Profile</a></Link>
+      </Menu.Item>
+      <Menu.Item key="1">
+        <Link href={urls.myEvents}><a>My Events</a></Link>
+      </Menu.Item>
+      <Menu.Divider />
+      <Menu.Item key="1">
+        <a onClick={() => logout()}>Log Out</a>
+      </Menu.Item>
+    </Menu>
+  )
+
+  const GuesMenu = (
+    <Menu mode="horizontal">
+      <Menu.Item key="0">
+        <Link href={urls.login}><a>Log In</a></Link>
+      </Menu.Item>
+      <Menu.Item key="1">
+        <Link href={urls.register}><a>Register</a></Link>
+      </Menu.Item>
+    </Menu>
+  )
 
   return (
     <HeaderContainer>
-      <Menu
-        mode="horizontal"
-      >
+      <Menu mode="horizontal">
         {links.map(({key, label, link}) => (
           <Menu.Item key={key}>
             <Link href={link}>
@@ -87,16 +88,30 @@ const LayoutHeader = ({currentUser, isLoggedIn}) => {
         ))}
       </Menu>
       <div className="header-right">
-        <span className='username'>{ isLoggedIn ? welcomeName(currentUser.name) : 'Welcome, Guest'}</span>
-        <Avatar size={35} />
+        { 
+          !isLoggedIn ? 
+            GuesMenu: 
+            <Dropdown overlay={UserMenu}>
+              <span className="user-dropdown" style={{cursor: 'pointer'}}>
+                <span className='username'>{ isLoggedIn ? welcomeName(currentUser.name) : 'Welcome, Guest'}</span>
+                <Avatar size={35} />
+              </span>
+            </Dropdown>
+        }
       </div>
     </HeaderContainer>
   )
 }
+
+
+const mapDispatchToProps = dispatch => ({
+  logout: () => dispatch(deauthenticate())
+})
+
 
 export default connect(
   ({user, authentication}) => ({
     isLoggedIn: authentication.token ? true : false,
     currentUser: user.currentUser
   }),
-  null)(LayoutHeader)
+  mapDispatchToProps)(LayoutHeader)

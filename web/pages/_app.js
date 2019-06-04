@@ -58,7 +58,7 @@ export default withRedux(initStore, { debug: false })(
       return (
         <Container>
           <Head>
-            <title>My page</title>
+            <title>Event Master</title>
           </Head>
           <Provider store={store}>
             <Component {...pageProps} />

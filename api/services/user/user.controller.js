@@ -1,6 +1,8 @@
 const APIError = require('../../helpers/APIError');
 const User = require('../../models/user');
-const model = require('../../helpers/model')
+const Event = require('../../models/event');
+const model = require('../../helpers/model');
+const eventHelper = require('../../helpers/event');
 
 const get = async (req, res, next) => {
 
@@ -28,4 +30,15 @@ const update = async(req, res, next) => {
   res.json(model.getResponseUser(user));
 }
 
-module.exports = { profile, update };
+const myEvents = async(req, res, next) => {
+  try {
+    const rawEvents = await Event.getByOwner(req.user.id)
+    const events = rawEvents.map(event => eventHelper.refineResponseEvent(event));
+
+    res.json(events);
+  } catch (e) {
+    next(new APIError(e.message))
+  }
+}
+
+module.exports = { profile, update, myEvents };

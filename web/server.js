@@ -68,14 +68,14 @@ app
       return app.render(req, res, '/login', req.query)
     })
 
-    server.get(/\/(profile|event\/create)/, [requireAuth], (req, res) => {
-      return handle(req, res)
-    })
-
-    server.get('/event/:id', (req, res) => {
+    server.get('/event/show/:id', (req, res) => {
       // req.params.id = 
       const queryParams = { ...req.query, id: req.params.id }
       return app.render(req, res, '/event/show', queryParams)
+    })
+
+    server.get(/\/(profile|event\/create)/, [requireAuth], (req, res) => {
+      return handle(req, res)
     })
 
     server.get('*', (req, res) => {

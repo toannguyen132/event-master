@@ -35,12 +35,19 @@ const refineResponseEvent = (event) => {
     } : null,
     startDate: event.startDate,
     endDate: event.endDate,
-    image: event.image,
+    images: event.image.map(_getImageResp),
     tickets: event.tickets,
     createdAt: event.createdAt
   }
+}
 
-  return resp;
+const _getImageResp = (img) => {
+  return {
+    id: img.id,
+    filename: img.filename,
+    type: img.type,
+    createdAt: img.createdAt
+  }
 }
 
 const refineResponseCategory = category => ({

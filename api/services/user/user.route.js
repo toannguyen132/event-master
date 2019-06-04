@@ -19,4 +19,8 @@ router.route('/profile')
 router.route('/profile')
   .post([isAuth, validate(paramValidation.updateProfile)], userController.update);
 
+// update profile
+router.route('/my-events')
+  .get([isAuth], userController.myEvents);
+
 module.exports = router;

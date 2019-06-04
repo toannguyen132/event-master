@@ -9,6 +9,7 @@ const initialState = {
     location: '',
     startDate: moment().format(),
     endDate: moment().format(),
+    image: [],
   },
   categories: []
 }
