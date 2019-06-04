@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { connect } from 'react-redux'
-import { Avatar, Dropdown } from 'antd'
+import { Avatar, Dropdown, Icon } from 'antd'
 import styled from 'styled-components'
 import { Menu } from 'antd'
 import urls from '../../model/urls'
@@ -53,14 +53,35 @@ const LayoutHeader = ({currentUser, isLoggedIn, logout}) => {
   const UserMenu = (
     <Menu>
       <Menu.Item key="0">
-        <Link href={urls.profile}><a>Profile</a></Link>
+        <Link href={urls.eventCreate}>
+          <div>
+            <Icon type="plus" />&nbsp;&nbsp;
+            New Event
+          </div>
+        </Link>
+      </Menu.Item>
+      <Menu.Item key="0">
+        <Link href={urls.profile}>
+          <div>
+            <Icon type="user" />&nbsp;&nbsp;
+            profile
+          </div>
+        </Link>
       </Menu.Item>
       <Menu.Item key="1">
-        <Link href={urls.myEvents}><a>My Events</a></Link>
+        <Link href={urls.myEvents}>
+          <div>
+            <Icon type="unordered-list" />&nbsp;&nbsp;
+            My Events
+          </div>
+        </Link>
       </Menu.Item>
       <Menu.Divider />
       <Menu.Item key="1">
-        <a onClick={() => logout()}>Log Out</a>
+        <div onClick={() => logout()}>
+          <Icon type="logout" />&nbsp;&nbsp;
+          Log Out
+        </div>
       </Menu.Item>
     </Menu>
   )

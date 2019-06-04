@@ -6,7 +6,6 @@ import { Row, Col } from 'antd'
 import EventCard from '../components/EventCard'
 import { logError } from '../utils/log'
 
-
 class IndexPage extends React.Component {
 
   static async getInitialProps(ctx) {
@@ -23,7 +22,6 @@ class IndexPage extends React.Component {
         logError('normal error:', e.message)
       }
     }
-    
   }
 
   render() {

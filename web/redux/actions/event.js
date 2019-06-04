@@ -1,4 +1,4 @@
-import { SET_EVENTS, SET_SINGLE_EVENT, SET_CATEGORIES} from '../types'
+import { SET_EVENTS, SET_SINGLE_EVENT, SET_CATEGORIES, SET_SEARCH_CRITERIA, SET_EVENTS_LOADING} from '../types'
 import apiGenerator from '../../api'
 import eventApi from '../../api/event'
 import { logError } from '../../utils/log'
@@ -6,6 +6,11 @@ import { logError } from '../../utils/log'
 /**
  * NORMAL ACTIONS
  */
+export const setEventsLoading = loading => ({
+  type: SET_EVENTS_LOADING,
+  payload: loading
+})
+
 const setEvents = events => {
   return {
     type: SET_EVENTS,
@@ -27,16 +32,25 @@ const setCategories = categories => {
   }
 }
 
+export const setSearchCriteria = criteria => {
+  return {
+    type: SET_SEARCH_CRITERIA,
+    payload: criteria
+  }
+}
+
 /**
  * ASYNC Action
  */
-export const searchEvents = () => {
-  return async (dispatch) => {
-    const api = apiGenerator()
-
+export const searchEvents = (criteria = {}) => {
+  return async (dispatch, getState) => {
+    const token = getState().authentication.token || ''
+    const api = apiGenerator(token)
+    dispatch(setEventsLoading(true))
     try{
-      const resp = await eventApi.search(api, {})
+      const resp = await eventApi.search(api, criteria)
       dispatch(setEvents(resp.data))
+      dispatch(setEventsLoading(false))
       return resp.data
     } catch (e) {
       logError('error:', e.message)
@@ -101,5 +115,6 @@ export default {
   setEvents,
   fetchEvent: searchEvents,
   createEvent,
-  getCategories
+  getCategories,
+  setSearchCriteria
 }

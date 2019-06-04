@@ -1,6 +1,8 @@
 
-export const search = (api) => {
-  return api.get('/event')
+export const search = (api, criteria) => {
+  return api.get('/event', {
+    params: criteria
+  })
 }
 
 export const create = (api, {name, description, startDate, endDate, location, image}) => {

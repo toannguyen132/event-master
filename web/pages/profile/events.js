@@ -18,20 +18,23 @@ class MyEvents extends Component {
     const {events} = this.props
 
     const columns = [
-      {
-        title: '',
-        dataIndex: 'image',
-        key: 'image',
-        render: (url) => <img height={50} src={url} />
-      },
+      // {
+      //   title: '',
+      //   dataIndex: 'image',
+      //   key: 'image',
+      //   render: (url) => <img height={50} src={url} />
+      // },
       {
         title: 'Name',
         dataIndex: 'name',
         key: 'name',
         render: (name, record) => (
-          <Link as={urls.showEvent(record.id)} href={urls.showEventQuery(record.id)}>
-            <a>{name}</a>
-          </Link>
+          <React.Fragment>
+            <img height={50} src={record.image} style={{marginRight: '15px'}}/>
+            <Link as={urls.showEvent(record.id)} href={urls.showEventQuery(record.id)}>
+              <a>{name}</a>
+            </Link>
+          </React.Fragment>
         )
       },
       {

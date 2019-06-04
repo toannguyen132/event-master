@@ -56,4 +56,18 @@ const refineResponseCategory = category => ({
   slug: category.slug
 })
 
-module.exports = { refineSearchParams, refineResponseEvent, refineResponseCategory }
+const createSearchFilter = (params) => {
+  const filter = {
+    s: params.search,
+    category: params.category,
+    fromDate: params.fromDate,
+    toDate: params.toDate,
+  }
+  const newFilters = {}
+  Object.keys(filter).forEach( key => {
+    if (filter[key]) newFilters[key] = filter[key]
+  });
+  return newFilters;
+}
+
+module.exports = { refineSearchParams, refineResponseEvent, refineResponseCategory, createSearchFilter}

@@ -1,7 +1,8 @@
-import { SET_EVENTS, SET_SINGLE_EVENT, SET_CATEGORIES } from '../types'
+import { SET_EVENTS, SET_SINGLE_EVENT, SET_CATEGORIES, SET_SEARCH_CRITERIA, SET_EVENTS_LOADING } from '../types'
 import moment from 'moment'
 
 const initialState = {
+  loading: false,
   events: [],
   currentEvent: {
     name: '',
@@ -11,17 +12,27 @@ const initialState = {
     endDate: moment().format(),
     image: [],
   },
-  categories: []
+  categories: [],
+  search: {
+    search: '',
+    date: '',
+    from: '',
+    to: ''
+  }
 }
 
 export default (state = initialState, action) => {
   switch(action.type) {
   case SET_EVENTS:
-    return { events: action.payload }
+    return { ...state, events: action.payload }
   case SET_SINGLE_EVENT:
-    return { currentEvent: action.payload}
+    return { ...state, currentEvent: action.payload}
   case SET_CATEGORIES:
-    return { categories: action.payload}
+    return { ...state, categories: action.payload}
+  case SET_SEARCH_CRITERIA:
+    return { ...state, search: action.payload}
+  case SET_EVENTS_LOADING:
+    return { ...state, loading: action.payload}
   default:
     return state
   }

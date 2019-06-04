@@ -15,9 +15,10 @@ const fs = require('fs');
 const search = (req, res, next) => {
   const params = eventHelper.refineSearchParams(req.query);
 
-  Event.list(params).then(events => {
-    const newEvents = events.map(event => eventHelper.refineResponseEvent(event));
+  const filter = eventHelper.createSearchFilter(params)
 
+  Event.list(filter).then(events => {
+    const newEvents = events.map(event => eventHelper.refineResponseEvent(event));
     res.json(newEvents);
   }).catch(e => {
     next(e);

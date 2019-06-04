@@ -2,8 +2,8 @@ const Promise = require('bluebird');
 const mongoose = require('mongoose');
 const httpStatus = require('http-status');
 const APIError = require('../helpers/APIError');
-const ObjectId = mongoose.Types.ObjectId;
 const Category = require('./category');
+const ObjectId = mongoose.Types.ObjectId;
 
 // eslint-disable-next-line no-useless-escape
 // const validateEmail = email => /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
@@ -44,14 +44,17 @@ const EventSchema = new mongoose.Schema({
     trim: true,
     index: true,
     required: 'Event name is required',
+    text: true
   },
   description: {
     type: String,
+    text: true
   },
   location: {
     type: String,
     index: true,
-    required: 'Location is required'
+    required: 'Location is required',
+    text: true
   },
   startDate: {
     type: Date,
@@ -128,13 +131,24 @@ EventSchema.statics = {
    * @param {number} limit - Limit number of users to be returned.
    * @returns {Promise<User[]>}
    */
-  list({ s = "", startDate = new Date(), skip = 0, limit = 50 } = {}) {
+  list({ s="", location = "", category = "", fromDate = new Date(), toDate = null, skip = 0, limit = 50 } = {}) {
     const today = new Date()
 
+    const filter = {}
+
+    // apply text search
+    if (s) filter['$text'] = {'$search': s}
+
+    // apply category
+    if (category) filter.category = ObjectId(category)
+
+    // apply date
+    if (fromDate || toDate) filter.startDate = {}
+    if (fromDate) filter.startDate['$gte'] = fromDate
+    if (toDate) filter.startDate['$lte'] = toDate
+
     // only search for future event
-    const query = this.find({
-      startDate: {$gt: today}
-    });
+    const query = this.find(filter);
 
     return query
       .sort({ startDate: 1, createdAt: -1 })
