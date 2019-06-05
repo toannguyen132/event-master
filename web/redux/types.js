@@ -2,6 +2,7 @@
 export const SET_LOADING = 'SET_LOADING'
 export const SET_ERROR = 'SET_ERROR'
 export const SET_MESSAGE = 'SET_MESSAGE'
+export const SET_HEADER_SEARCH = 'SET_HEADER_SEARCH'
 
 // authentication
 const AUTH = 'AUTH'

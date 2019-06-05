@@ -62,7 +62,7 @@ const HeaderContainer = styled.div`
 
 const welcomeName = name => `Hello, ${name ? name : 'User' }`
 
-const LayoutHeader = ({currentUser, isLoggedIn, logout}) => {
+const LayoutHeader = ({currentUser, isLoggedIn, logout, headerSearch}) => {
   
   const UserMenu = (
     <Menu>
@@ -116,15 +116,13 @@ const LayoutHeader = ({currentUser, isLoggedIn, logout}) => {
     Router.push(urls.searchQuery(term), urls.search(term))
   }
 
-  const isSearchPage = window ? /^\/search/.test(window.location.pathname) : false
-
   return (
     <HeaderContainer>
       <div className="header-left">
         <Link href="/">
           <a className="logo">EventMaster</a>
         </Link>
-        { !isSearchPage ? 
+        { headerSearch ? 
           <Search placeholder="Search Event" allowClear={true} onSearch={onQuickSearch} />
           : null
         }
@@ -154,8 +152,9 @@ const mapDispatchToProps = dispatch => ({
 
 
 export default connect(
-  ({user, authentication}) => ({
+  ({user, authentication, common}) => ({
     isLoggedIn: authentication.token ? true : false,
-    currentUser: user.currentUser
+    currentUser: user.currentUser,
+    headerSearch: common.headerSearch
   }),
   mapDispatchToProps)(LayoutHeader)

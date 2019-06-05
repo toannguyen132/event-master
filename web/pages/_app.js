@@ -9,6 +9,7 @@ import { deauthenticate } from '../redux/actions/authentication'
 import Head from 'next/head'
 import initialize from '../utils/initialize'
 import '../assets/less/style.less'
+import { setHeaderSearch } from '../redux/actions/common'
 
 const authPathRex = /^\/(profile|create-event)/
 const requireAuth = (path) => authPathRex.test(path)
@@ -31,6 +32,12 @@ export default withRedux(initStore, { debug: false })(
 
       const pathname = ctx.pathname
 
+      // allow displaying header search box
+      if ( /^\/search/.test(pathname)){
+        ctx.store.dispatch(setHeaderSearch(false))
+      } else {
+        ctx.store.dispatch(setHeaderSearch(true))
+      }
 
       if (token){
         try{
