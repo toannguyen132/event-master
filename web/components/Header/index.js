@@ -116,7 +116,7 @@ const LayoutHeader = ({currentUser, isLoggedIn, logout}) => {
     Router.push(urls.searchQuery(term), urls.search(term))
   }
 
-  const isSearchPage = /^\/search/.test(window.location.pathname)
+  const isSearchPage = window ? /^\/search/.test(window.location.pathname) : false
 
   return (
     <HeaderContainer>

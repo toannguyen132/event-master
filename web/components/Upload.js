@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { logInfo, logError } from '../utils/log'
 import { getCookie } from '../utils/cookie'
 import apiCreator from '../api'
-import PropTypes from 'prop-types';
+import PropTypes from 'prop-types'
 import _ from 'lodash'
 
 const UploadBox = styled.div`

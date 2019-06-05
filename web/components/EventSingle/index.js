@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import { Row, Col, Button } from 'antd'
-import { logInfo } from '../../utils/log';
+import { logInfo } from '../../utils/log'
 
 const defaultImage = '/static/img/thumb.jpg'
 
