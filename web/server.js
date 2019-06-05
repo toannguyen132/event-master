@@ -74,6 +74,12 @@ app
       return app.render(req, res, '/event/show', queryParams)
     })
 
+    server.get('/search/:search', (req, res) => {
+      const queryParams = { ...req.query, search: decodeURI(req.params.search) }
+      return app.render(req, res, '/search', queryParams)
+    })
+
+
     server.get(/\/(profile|event\/create)/, [requireAuth], (req, res) => {
       return handle(req, res)
     })

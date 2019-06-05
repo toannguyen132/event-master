@@ -1,10 +1,13 @@
 import Link from 'next/link'
 import { connect } from 'react-redux'
-import { Avatar, Dropdown, Icon } from 'antd'
+import { Avatar, Dropdown, Icon, Input } from 'antd'
+import Router from 'next/router'
 import styled from 'styled-components'
 import { Menu } from 'antd'
 import urls from '../../model/urls'
 import { deauthenticate } from '../../redux/actions/authentication'
+
+const Search = Input.Search
 
 const HeaderContainer = styled.div`
   display: flex;
@@ -13,6 +16,11 @@ const HeaderContainer = styled.div`
   color: #2d2d2d;
   background: #fff;
   padding: 0 50px;
+
+  .logo{
+    font-weight: 700;
+    font-size: 18px;
+  }
   
   .ant-menu {
     background-color: transparent !important;
@@ -27,8 +35,19 @@ const HeaderContainer = styled.div`
       border-bottom: 0;
     }
   }
+
+  .header-left{
+    display: flex;
+    align-items: center;
+    padding: 15px 0;
+    > * {
+      margin-right: 15px;
+    }
+  }
   
   .header-right {
+    display: flex;
+    align-items: center;
     .username{
       margin-right: 15px;
       vertical-align: middle;
@@ -44,11 +63,6 @@ const HeaderContainer = styled.div`
 const welcomeName = name => `Hello, ${name ? name : 'User' }`
 
 const LayoutHeader = ({currentUser, isLoggedIn, logout}) => {
-  let links = [{
-    key: 'home',
-    label: 'Event Master',
-    link: urls.home
-  }]
   
   const UserMenu = (
     <Menu>
@@ -97,17 +111,26 @@ const LayoutHeader = ({currentUser, isLoggedIn, logout}) => {
     </Menu>
   )
 
+  const onQuickSearch = (value) => {
+    const term = encodeURI(value)
+    Router.push(urls.searchQuery(term), urls.search(term))
+  }
+
+  const isSearchPage = /^\/search/.test(window.location.pathname)
+
   return (
     <HeaderContainer>
-      <Menu mode="horizontal">
-        {links.map(({key, label, link}) => (
-          <Menu.Item key={key}>
-            <Link href={link}>
-              <a>{label}</a>
-            </Link>
-          </Menu.Item>
-        ))}
-      </Menu>
+      <div className="header-left">
+        <Link href="/">
+          <a className="logo">EventMaster</a>
+        </Link>
+        { !isSearchPage ? 
+          <Search placeholder="Search Event" allowClear={true} onSearch={onQuickSearch} />
+          : null
+        }
+        
+      </div>
+      
       <div className="header-right">
         { 
           !isLoggedIn ? 

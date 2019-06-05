@@ -6,7 +6,10 @@ import PropTypes from 'prop-types'
 import { setSearchCriteria } from '../redux/actions/event'
 
 const SearchWrapper = styled.div`
-
+  border: 1px solid #dfdfdf;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
 `
 
 const SearchRow = styled.div`
@@ -54,7 +57,7 @@ class SearchBox extends Component {
       search: this.state.search || null,
       category: this.state.category || null
     })
-    
+
     this.props.onSearch()
   }
 

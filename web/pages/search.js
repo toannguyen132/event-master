@@ -4,17 +4,18 @@ import { connect } from 'react-redux'
 import eventActions from '../redux/actions/event'
 import { Row, Col, Spin } from 'antd'
 import EventCard from '../components/EventCard'
-import { logError, logInfo } from '../utils/log'
+import { logError } from '../utils/log'
 import SearchBox from '../components/SearchBox'
-import { getCategories, searchEvents, } from '../redux/actions/event'
+import { getCategories, searchEvents, setSearchCriteria } from '../redux/actions/event'
 
 class SearchPage extends React.Component {
 
   static async getInitialProps(ctx) {
-    const search = ctx.store.getState().event.search
+    const search = ctx.query.search || '' //ctx.store.getState().event.search
     try{
-      const events = await ctx.store.dispatch(eventActions.fetchEvent())
+      const events = await ctx.store.dispatch(searchEvents({search}))
       const categories = await ctx.store.dispatch(getCategories())
+      ctx.store.dispatch(setSearchCriteria({search}))
 
       return {
         categories,
