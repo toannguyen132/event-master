@@ -4,6 +4,8 @@ import styled from 'styled-components'
 import { Row, Col, Input, Select, Button} from 'antd'
 import PropTypes from 'prop-types'
 import { setSearchCriteria } from '../redux/actions/event'
+import { convertRangeDate } from '../model/form'
+import { logInfo } from '../utils/log';
 
 const SearchWrapper = styled.div`
   border: 1px solid #dfdfdf;
@@ -31,9 +33,24 @@ const dateOptions = [
     value: 'tomorrow'
   },
   {
-    key: 'thisweek',
+    key: 'thisWeek',
     label: 'This Week',
-    value: 'thisweek'
+    value: 'thisWeek'
+  },
+  {
+    key: 'nextWeek',
+    label: 'Next Week',
+    value: 'nextWeek'
+  },
+  {
+    key: 'thisMonth',
+    label: 'This Month',
+    value: 'thisMonth'
+  },
+  {
+    key: 'nextMonth',
+    label: 'Next Month',
+    value: 'nextMonth'
   }
 ]
 
@@ -53,9 +70,14 @@ class SearchBox extends Component {
 
   onSearch = async (e) => {
     e.preventDefault()
+
+    const rangeDate = convertRangeDate(this.state.date)
+
     await this.props.setSearchCriteria({
       search: this.state.search || null,
-      category: this.state.category || null
+      category: this.state.category || null,
+      fromDate: rangeDate && rangeDate.from ? rangeDate.from.format() : null,
+      toDate: rangeDate && rangeDate.to ? rangeDate.to.format() : null
     })
 
     this.props.onSearch()

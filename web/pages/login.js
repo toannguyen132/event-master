@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React, { Component } from 'react'
-import { Form, Input, Icon, Button } from 'antd'
+import { Form, Input, Icon, Button , Typography, message } from 'antd'
 import { connect } from 'react-redux'
 import Link  from 'next/link'
 import Layout from '../components/Layout'
@@ -8,6 +8,8 @@ import FloatingForm from '../components/FloatingForm'
 import authActions  from '../redux/actions/authentication'
 import initialize from '../utils/initialize';
 import Router from 'next/router'
+
+const {Text} = Typography
 
 class Login extends Component {
 
@@ -20,7 +22,10 @@ class Login extends Component {
           email: values.email,
           password: values.password
         }).then(() => {
+          message.success("You have logged in successfully!")
           Router.push('/profile')
+        }).catch(() => {
+
         })
       }
     });
@@ -31,6 +36,14 @@ class Login extends Component {
     return (
       <Layout>
         <FloatingForm>
+          <p>
+          { 
+            this.props.loginMessage ? 
+              <Text type="danger">{this.props.loginMessage}</Text> :
+              <Text type="danger"></Text>
+          }
+          </p>
+          
           <Form onSubmit={this.handleSubmit}>
             <Form.Item>
               {getFieldDecorator('email', {
@@ -69,8 +82,6 @@ class Login extends Component {
 
 Login.getInitialProps = async function(ctx) {
   initialize(ctx)
-  // const token = ctx.store.getState().authentication.token
-  // requireNotAuth(ctx)
 
   return {
 
@@ -78,7 +89,8 @@ Login.getInitialProps = async function(ctx) {
 }
 
 const mapStateToProps = ({authentication}) => ({
-  isLoggedIn: authentication.token ? true : false
+  isLoggedIn: authentication.token ? true : false,
+  loginMessage: authentication.loginMessage
 })
 const mapDispatchToProps = dispatch => ({
   login: ({email, password}) => dispatch(authActions.authenticate({email, password}))

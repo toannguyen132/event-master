@@ -1,8 +1,7 @@
 import React  from 'react'
 import Layout from '../components/Layout'
 import { connect } from 'react-redux'
-import eventActions from '../redux/actions/event'
-import { Row, Col, Spin } from 'antd'
+import { Row, Col, Spin, Empty } from 'antd'
 import EventCard from '../components/EventCard'
 import { logError } from '../utils/log'
 import SearchBox from '../components/SearchBox'
@@ -48,11 +47,14 @@ class SearchPage extends React.Component {
         <h1 style={{marginTop: '40px'}}>Found Events</h1>
         <Spin spinning={this.props.loading} size="large">
           <Row gutter={20} type="flex">
-            {events.map(event => (
-              <Col key={event.id} span={8} style={{display: 'flex', flexDirection: 'column'}}>
-                <EventCard event={event}/>
-              </Col>
-            ))}
+            { 
+              events.length > 0 ? events.map(event => (
+                <Col key={event.id} span={8} style={{display: 'flex', flexDirection: 'column'}}>
+                  <EventCard event={event}/>
+                </Col>
+              )) :
+                <Col span={24}><Empty description="No events found!"/></Col>
+            }
           </Row>
         </Spin>
         

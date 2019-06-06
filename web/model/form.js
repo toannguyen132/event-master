@@ -1,3 +1,4 @@
+import moment from 'moment'
 
 export const eventForm = [
   {
@@ -39,6 +40,37 @@ export const eventForm = [
     type: 'dateTimeRange',
   }
 ]
+
+export const convertRangeDate = (quickDate) => {
+  const set = {
+    'today': {
+      from: moment().startOf('day'),
+      to: moment().endOf('day')
+    },
+    'tomorrow': {
+      from: moment().startOf('day').add(1, 'd'),
+      to: moment().endOf('day').add(1, 'd')
+    },
+    'thisWeek': {
+      from: moment().startOf('week'),
+      to: moment().endOf('week')
+    },
+    'nextWeek': {
+      from: moment().startOf('week').add(7, 'd'),
+      to: moment().endOf('week').add(7, 'd')
+    },
+    'thisMonth': {
+      from: moment().startOf('month'),
+      to: moment().endOf('month')
+    },
+    'nextMonth': {
+      from: moment().add(1, 'M').startOf('month'),
+      to: moment().add(1, 'M').endOf('month')
+    }
+  }
+
+  return set[quickDate] || null
+}
 
 export const mergeDefaultValue = (forms, data) => {
   return forms.map(({...options})=> {

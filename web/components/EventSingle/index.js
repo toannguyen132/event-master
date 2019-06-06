@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import { Row, Col, Button } from 'antd'
 import { logInfo } from '../../utils/log'
+import _ from 'lodash'
 
 const defaultImage = '/static/img/thumb.jpg'
 
@@ -84,8 +85,9 @@ class EventSingle extends Component {
   state = {  }
 
   render() { 
-    const { name, image, owner, description, location} = this.props.event
-    const imageUrl = image && image.length > 0 ? `/uploads/${image[0].filename}` : defaultImage
+    const { name, images, owner, description, location} = this.props.event
+    const imageUrl = images && images.length > 0 ? `/uploads/${images[0].filename}` : defaultImage
+    // const imageUrl = _.get(images, '[0].filename', defaultImage)
 
     return ( 
       <Wrapper>

@@ -14,6 +14,7 @@ const CardWrapper = styled.div`
   flex-direction: column;
   margin-bottom: 20px;
   background-color: #fff;
+  opacity: ${props => props.isPassed ? '0.5' : '1'}
 `
 const CardThumbWrap = styled.div`
   display: block;
@@ -84,9 +85,10 @@ class EventCard extends Component {
     // logInfo(`event ${name} has ${image.length} images` )
     const eventImage = images.length > 0 ? `/uploads/${images[0].filename}` : defaultThumb
     const link = urls.showEvent(id)
+    const isPassed = moment().isAfter(startDate)
 
     return ( 
-      <CardWrapper>
+      <CardWrapper isPassed={isPassed}>
         <Link as={link} href={`/event/show/?id=${id}`}>
           <div>
             <CardThumb image={eventImage} />

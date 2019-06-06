@@ -1,11 +1,11 @@
 import Router from 'next/router'
-import { AUTHENTICATE, DEAUTHENTICATE } from '../types'
+import { AUTHENTICATE, DEAUTHENTICATE, SET_LOGIN_MESSAGE, SET_REGISTER_MESSAGE } from '../types'
 import { setCookie, removeCookie } from '../../utils/cookie'
 import createApi from '../../api'
 import authApi from '../../api/auth'
 import { message } from 'antd'
-import { logInfo } from '../../utils/log'
 import _ from 'lodash'
+import { logInfo, logError } from '../../utils/log'
 
 /**
  * NORMAL ACTIONS
@@ -17,6 +17,26 @@ export const setAuthToken = token => {
   }
 }
 
+export const setLoginMessage = message => ({
+  type: SET_LOGIN_MESSAGE,
+  payload: message
+})
+
+export const setRegisterMessage = message => ({
+  type: SET_REGISTER_MESSAGE,
+  payload: message
+})
+
+export const clearLoginMessage = () => ({
+  type: SET_LOGIN_MESSAGE,
+  payload: ''
+})
+
+export const clearRegisterMessage = () => ({
+  type: SET_REGISTER_MESSAGE,
+  payload: ''
+})
+
 /**
  * ASYNC Action
  */
@@ -26,13 +46,19 @@ export const authenticate = ({ email, password }) => {
     // login
     const api = createApi()
 
+    // clear login message
+    dispatch(clearLoginMessage())
+
     try {
       const resp = await authApi.login(api, {email, password})
       setCookie('token', resp.data.token)
       dispatch(setAuthToken(resp.data.token))
-      return Promise.resolve(resp.data)
+      return resp.data
     } catch (e) {
-      return Promise.reject(e.message)
+      let msg = _.get(e,'response.data.message', e.message)
+      dispatch(setLoginMessage(msg))
+     
+      throw new Error(msg)
     }
 
   }
@@ -76,5 +102,9 @@ export default {
   authenticate,
   reauthenticate,
   deauthenticate,
-  register
+  register,
+  setLoginMessage,
+  setRegisterMessage,
+  clearLoginMessage,
+  clearRegisterMessage
 }

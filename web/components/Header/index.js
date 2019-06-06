@@ -12,7 +12,7 @@ const Search = Input.Search
 const HeaderContainer = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: stretch;
   color: #2d2d2d;
   background: #fff;
   padding: 0 50px;
@@ -51,6 +51,17 @@ const HeaderContainer = styled.div`
     .username{
       margin-right: 15px;
       vertical-align: middle;
+    }
+    .ant-menu {
+      height: 100%;
+      > li {
+        height: 100%;
+        > a {
+          display: block;
+          height: 100%;
+          padding: 5px 0;
+        }
+      }
     }
    }
 
