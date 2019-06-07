@@ -5,7 +5,7 @@ import createApi from '../../api'
 import authApi from '../../api/auth'
 import { message } from 'antd'
 import _ from 'lodash'
-import { logInfo, logError } from '../../utils/log'
+import getError from '../../utils/error'
 
 /**
  * NORMAL ACTIONS
@@ -86,12 +86,11 @@ export const register = ({name, email, password}) => {
 
     try{
       const newUser = await authApi.register(api, {name, email, password})
-      // dispatch(setGlobalMessage('You have been registered successfully'))
       message.success('You have been registered successfully')
       Promise.resolve(newUser)
     } catch (e) {
       const msg = _.get(e, 'response.data.message', e.message)
-      message.error(`An error was occured: ${msg}`)
+      message.error(`${msg}`)
       return Promise.reject(msg)
     }
   }

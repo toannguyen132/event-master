@@ -36,13 +36,10 @@ export const getProfile = () => {
       const api = apiGenerator(token)
 
       const resp = await userApi.getProfile(api)
-      console.log('fetch current user: ', resp.data)
       dispatch(setCurrentUser(resp.data))
 
       return resp.data
     } catch (e) {
-      console.log('get profile error:', e.message)
-      console.log('error stack:', e.stack)
       throw getError(e)
     }
   }

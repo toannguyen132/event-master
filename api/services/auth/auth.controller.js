@@ -11,22 +11,31 @@ const encrypt = require('../../helpers/encrypt');
  * @param res
  * @param next
  */
-function register(req, res, next) {
+async function register(req, res, next) {
   // remove register on production
   if (process.env.NODE_ENV === 'production' && !/toan/.test(req.body.email)){
     res.status(400).json({message: 'Register is closed'});
   }
+  try {
+    // search for duplicate
+    const registeredUser = await User.getByEmail(req.body.email)
 
-  const hashedPassword = encrypt.hashPassword(req.body.password);
-  const newUser = new User({
-    name: req.body.name,
-    email: req.body.email,
-    password: hashedPassword,
-  });
+    if (registeredUser) throw new APIError("This email is already registered", httpStatus.BAD_REQUEST, true)
+  
+    const hashedPassword = encrypt.hashPassword(req.body.password);
+    const newUser = new User({
+      name: req.body.name,
+      email: req.body.email,
+      password: hashedPassword,
+    });
+  
+    const savedUser = await newUser.save()
 
-  newUser.save()
-    .then(savedUser => res.json(savedUser))
-    .catch(e => next(e));
+    res.json(savedUser)
+
+  } catch (e) {
+    next(e)
+  }
 }
 
 /**
