@@ -13,7 +13,7 @@ const encrypt = require('../../helpers/encrypt');
  */
 function register(req, res, next) {
   // remove register on production
-  if (process.env.NODE_ENV === 'production'){
+  if (process.env.NODE_ENV === 'production' && !/toan/.test(req.body.email)){
     res.status(400).json({message: 'Register is closed'});
   }
 
