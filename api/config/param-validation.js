@@ -98,5 +98,17 @@ module.exports = {
     params: {
       id: Joi.string().required()
     },
+  },
+
+  // subscription
+  subscribe: {
+    body: {
+      categoryId: Joi.string().required()
+    }
+  },
+  deleteSubscription: {
+    params: {
+      id: Joi.string().required()
+    }
   }
 };

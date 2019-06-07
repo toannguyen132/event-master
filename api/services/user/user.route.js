@@ -23,4 +23,14 @@ router.route('/profile')
 router.route('/my-events')
   .get([isAuth], userController.myEvents);
 
+// subscribe category
+router.route('/subscribe')
+  .get([isAuth], userController.getSubscriptions);
+
+router.route('/subscribe')
+  .post([isAuth, validate(paramValidation.subscribe)], userController.subscribe);
+
+router.route('/subscribe/:id')
+  .delete([isAuth, validate(paramValidation.deleteSubscription)], userController.deleteSubscription);
+
 module.exports = router;

@@ -79,7 +79,6 @@ app
       return app.render(req, res, '/search', queryParams)
     })
 
-
     server.get(/\/(profile|event\/create)/, [requireAuth], (req, res) => {
       return handle(req, res)
     })

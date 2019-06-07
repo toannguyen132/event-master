@@ -1,11 +1,13 @@
 import Link from 'next/link'
 import { connect } from 'react-redux'
-import { Avatar, Dropdown, Icon, Input } from 'antd'
+import { Avatar, Dropdown, Icon, Input, Badge } from 'antd'
 import Router from 'next/router'
 import styled from 'styled-components'
 import { Menu } from 'antd'
 import urls from '../../model/urls'
 import { deauthenticate } from '../../redux/actions/authentication'
+import { Component } from 'react'
+import { logInfo } from '../../utils/log';
 
 const Search = Input.Search
 
@@ -63,7 +65,15 @@ const HeaderContainer = styled.div`
         }
       }
     }
-   }
+    .notification {
+      font-size: 18px;
+      /* width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center; */
+    }
+  }
 
   .user-dropdown{
     cursor: pointer;
@@ -73,89 +83,121 @@ const HeaderContainer = styled.div`
 
 const welcomeName = name => `Hello, ${name ? name : 'User' }`
 
-const LayoutHeader = ({currentUser, isLoggedIn, logout, headerSearch}) => {
-  
-  const UserMenu = (
-    <Menu>
-      <Menu.Item key="0">
-        <Link href={urls.eventCreate}>
-          <div>
-            <Icon type="plus" />&nbsp;&nbsp;
-            New Event
-          </div>
-        </Link>
-      </Menu.Item>
-      <Menu.Item key="0">
-        <Link href={urls.profile}>
-          <div>
-            <Icon type="user" />&nbsp;&nbsp;
-            profile
-          </div>
-        </Link>
-      </Menu.Item>
-      <Menu.Item key="1">
-        <Link href={urls.myEvents}>
-          <div>
-            <Icon type="unordered-list" />&nbsp;&nbsp;
-            My Events
-          </div>
-        </Link>
-      </Menu.Item>
-      <Menu.Divider />
-      <Menu.Item key="1">
-        <div onClick={() => logout()}>
-          <Icon type="logout" />&nbsp;&nbsp;
-          Log Out
-        </div>
-      </Menu.Item>
-    </Menu>
-  )
 
-  const GuesMenu = (
-    <Menu mode="horizontal">
-      <Menu.Item key="0">
-        <Link href={urls.login}><a>Log In</a></Link>
-      </Menu.Item>
-      <Menu.Item key="1">
-        <Link href={urls.register}><a>Register</a></Link>
-      </Menu.Item>
-    </Menu>
-  )
+class LayoutHeader extends Component {
 
-  const onQuickSearch = (value) => {
-    const term = encodeURI(value)
-    Router.push(urls.searchQuery(term), urls.search(term))
+  constructor(props) {
+    super(props)
+    const {currentUser} = this.props
+    this.state = {
+      hasNotification: currentUser.notifications && currentUser.notifications.length > 0 && currentUser.notifications.some(sub => sub.read == false )
+    }
   }
 
-  return (
-    <HeaderContainer>
-      <div className="header-left">
-        <Link href="/">
-          <a className="logo">EventMaster</a>
-        </Link>
-        { headerSearch ? 
-          <Search placeholder="Search Event" allowClear={true} onSearch={onQuickSearch} />
-          : null
-        }
-        
-      </div>
-      
-      <div className="header-right">
-        { 
-          !isLoggedIn ? 
-            GuesMenu: 
-            <Dropdown overlay={UserMenu}>
-              <span className="user-dropdown" style={{cursor: 'pointer'}}>
-                <span className='username'>{ isLoggedIn ? welcomeName(currentUser.name) : 'Welcome, Guest'}</span>
-                <Avatar size={35} />
-              </span>
-            </Dropdown>
-        }
-      </div>
-    </HeaderContainer>
-  )
-}
+  render() {
+    const {currentUser, isLoggedIn, logout, headerSearch} = this.props
+    const {hasNotification} = this.state
 
+    const logUserOut = () => {
+      logout().then(() => {
+        Router.push(urls.home)
+      })
+    }
+
+    const UserMenu = (
+      <Menu>
+        <Menu.Item key="new-event">
+          <Link href={urls.eventCreate}>
+            <div>
+              <Icon type="plus" />&nbsp;&nbsp;
+              New Event
+            </div>
+          </Link>
+        </Menu.Item>
+        <Menu.Item key="profile">
+          <Link href={urls.profile}>
+            <div>
+              <Icon type="user" />&nbsp;&nbsp;
+              profile
+            </div>
+          </Link>
+        </Menu.Item>
+        <Menu.Item key="my-events">
+          <Link href={urls.myEvents}>
+            <div>
+              <Icon type="unordered-list" />&nbsp;&nbsp;
+              My Events
+            </div>
+          </Link>
+        </Menu.Item>
+        <Menu.Divider />
+        <Menu.Item key="logout">
+          <div onClick={() => logUserOut()}>
+            <Icon type="logout" />&nbsp;&nbsp;
+            Log Out
+          </div>
+        </Menu.Item>
+      </Menu>
+    )
+
+    const GuestMenu = (
+      <Menu mode="horizontal">
+        <Menu.Item key="0">
+          <Link href={urls.login}><a>Log In</a></Link>
+        </Menu.Item>
+        <Menu.Item key="1">
+          <Link href={urls.register}><a>Register</a></Link>
+        </Menu.Item>
+      </Menu>
+    )
+
+    const UserDropdown = (
+      <React.Fragment>
+        <Dropdown overlay={UserMenu}>
+          <span className="user-dropdown" style={{cursor: 'pointer'}}>
+            <span className='username'>{ isLoggedIn ? welcomeName(currentUser.name) : 'Welcome, Guest'}</span>
+            <Avatar size={35} />
+          </span>
+        </Dropdown>
+        <Dropdown overlay={UserMenu}>
+          <Badge count={hasNotification ? 1 : 0} dot>
+            <span className="notification" style={{marginLeft: '15px'}} >
+              <Icon type="notification" />
+            </span>
+          </Badge>
+        </Dropdown>
+      </React.Fragment>
+    )
+
+    const onQuickSearch = (value) => {
+      const term = encodeURI(value)
+      Router.push(urls.searchQuery(term), urls.search(term))
+    }
+
+    return (
+      <HeaderContainer>
+        <div className="header-left">
+          <Link href="/">
+            <a className="logo">EventMaster</a>
+          </Link>
+          { headerSearch ? 
+            <Search placeholder="Search Event" allowClear={true} onSearch={onQuickSearch} />
+            : null
+          }
+          
+        </div>
+        
+        <div className="header-right">
+          { 
+            !isLoggedIn ? 
+              GuestMenu:
+              UserDropdown
+          }
+        </div>
+      </HeaderContainer>
+    )
+  }
+}
 
 const mapDispatchToProps = dispatch => ({
   logout: () => dispatch(deauthenticate())

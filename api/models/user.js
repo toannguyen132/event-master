@@ -36,6 +36,20 @@ const UserSchema = new mongoose.Schema({
   },
   address: String,
   dob: Date,
+  subscriptions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Category'}],
+  notifications: [{
+    message: String,
+    notiType: {
+      type: String,
+      enum: ['NEW_EVENT'],
+      default: 'NEW_EVENT'
+    },
+    data: String,
+    read: {
+      type: Boolean,
+      default: false
+    }
+  }],
   createdAt: {
     type: Date,
     default: Date.now
@@ -62,7 +76,9 @@ UserSchema.statics = {
    * @returns {Promise<User, APIError>}
    */
   get(id) {
-    return this.findById(id)
+    const query = this.findById(id)
+    return query
+    .populate('subscriptions')
       .exec()
       .then((user) => {
         if (user) {
@@ -74,7 +90,9 @@ UserSchema.statics = {
   },
 
   getByEmail(email) {
-    return this.findOne({ email })
+    const query = this.findOne({ email })
+    return query
+      .populate('subscriptions')
       .exec()
       .then((user) => {
         if (user) {
@@ -84,6 +102,19 @@ UserSchema.statics = {
         return Promise.reject(err);
       });
   },
+
+  getBySubscription(catId) {
+    const query = this.find({
+      subscriptions: {$in: [catId]}
+    })
+
+    return query
+      .populate('subscriptions')
+      .exec()
+      .then((user) => {
+        return user;
+      });
+  }
 };
 
 /**

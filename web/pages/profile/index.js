@@ -6,6 +6,7 @@ import Link from 'next/link'
 import {display, TYPE_DATE} from '../../utils/display'
 import { Button } from 'antd'
 import { deauthenticate } from '../../redux/actions/authentication'
+import ProfileLayout from '../../components/Layout/ProfileLayout'
 
 class Index extends Component {
 
@@ -18,7 +19,8 @@ class Index extends Component {
     const {name, email, dob, address} = currentUser
     return (
       <Wrapper>
-        <FloatedContent>
+        <ProfileLayout activeKey="profile">
+        
           <h1>Current user</h1>
           <p><strong>Name</strong>: {display(name)}</p>
           <p><strong>Email</strong>: {display(email)}</p>
@@ -31,7 +33,7 @@ class Index extends Component {
             </Link>
             <Button style={{marginLeft: '20px'}} onClick={this.handleLogout}>Log Out</Button>
           </section>
-        </FloatedContent>
+        </ProfileLayout>
       </Wrapper>
     )
   }

@@ -53,6 +53,7 @@ const login = async (req, res, next) => {
     }
 
   } catch (e) {
+    console.log(e);
     const err = new APIError('Authentication Error', httpStatus.UNAUTHORIZED, true);
     return next(err);
   }

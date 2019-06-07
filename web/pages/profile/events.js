@@ -2,7 +2,8 @@
 import React, { Component } from 'react'
 import Link from 'next/link'
 import { connect } from 'react-redux'
-import Wrapper from '../../components/Layout'
+import Layout from '../../components/Layout'
+import ProfileLayout from '../../components/Layout/ProfileLayout'
 import apiCreator from '../../api'
 import { getMyEvents } from '../../api/user'
 import { getCookie } from '../../utils/cookie'
@@ -18,23 +19,20 @@ class MyEvents extends Component {
     const {events} = this.props
 
     const columns = [
-      // {
-      //   title: '',
-      //   dataIndex: 'image',
-      //   key: 'image',
-      //   render: (url) => <img height={50} src={url} />
-      // },
+      {
+        title: '',
+        dataIndex: 'image',
+        key: 'image',
+        render: (url) => <img height={50} src={url} />
+      },
       {
         title: 'Name',
         dataIndex: 'name',
         key: 'name',
         render: (name, record) => (
-          <React.Fragment>
-            <img height={50} src={record.image} style={{marginRight: '15px'}}/>
-            <Link as={urls.showEvent(record.id)} href={urls.showEventQuery(record.id)}>
-              <a>{name}</a>
-            </Link>
-          </React.Fragment>
+          <Link as={urls.showEvent(record.id)} href={urls.showEventQuery(record.id)}>
+            <a>{name}</a>
+          </Link>
         )
       },
       {
@@ -58,11 +56,13 @@ class MyEvents extends Component {
 
 
     return (
-      <Wrapper>
-        <h1>My Events</h1>
-        
-        <Table columns={columns} dataSource={dataSet} rowKey="id"/>
-      </Wrapper>
+      <Layout>
+        <ProfileLayout activeKey="events">
+          <h1>My Events</h1>
+          
+          <Table columns={columns} dataSource={dataSet} rowKey="id"/>
+        </ProfileLayout>
+      </Layout>
     )
   }
 }

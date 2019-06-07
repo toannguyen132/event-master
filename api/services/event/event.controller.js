@@ -3,7 +3,11 @@ const APIError = require('../../helpers/APIError');
 // const config = require('../../config/config');
 const Event = require('../../models/event');
 const Category = require('../../models/category');
+const User = require('../../models/user');
 const eventHelper = require('../../helpers/event');
+const model = require('../../helpers/model')
+const httpStatus = require('http-status');
+
 const fs = require('fs');
 
 /**
@@ -177,4 +181,59 @@ const createTest = (req, res, next) => {
   res.json(req.body);
 }
 
-module.exports = { search, get, create, update, upload, createTest, getCategories, initUpload };
+const notify = async (req, res, next) => {
+  const eventId = req.params.id;
+  try{
+    const rawEvent = await Event.get(eventId);
+    await _notifyNewEvent(rawEvent)
+
+    const users = await User.getBySubscription(rawEvent.category[0].id)
+
+    res.json({
+      message: 'test',
+      total: users.length,
+      users: users
+    })
+  } catch (e) {
+    console.error(e)
+    next(e)
+  } 
+}
+
+const _notify = async(uids, notifications) => {
+  try {
+    const result = await User.updateMany({_id: {$in: uids} }, {
+      $push: {
+        notifications: {
+          $each: notifications,
+          $slice: -3
+        }
+      }
+    })
+
+    return true;
+  } catch (e) {
+    console.error(e)
+    throw new APIError(e.message, httpStatus[500], true)
+  }
+}
+
+const _notifyNewEvent = async (event) => {
+  if (!event.category || event.category.length == 0 )
+    return false;
+
+  const catId = event.category[0].id;
+  const catName = event.category[0].name;
+  const users = await User.getBySubscription(catId);
+  const uids = users.map(u => u.id)
+  
+  const notification = {
+    message: `A new event in ${catName} has been posted`,
+    notiType: "NEW_EVENT",
+    data: event.id
+  }
+
+  return _notify(uids, [notification])
+}
+
+module.exports = { search, get, create, update, upload, createTest, getCategories, initUpload, notify };

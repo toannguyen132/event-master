@@ -39,4 +39,7 @@ router.route('/upload')
 router.route('/test')
   .post([isAuth, upload.single('image')], eventCtrl.createTest);
 
+router.route('/notify/:id')
+    .get(eventCtrl.notify);
+
 module.exports = router;
