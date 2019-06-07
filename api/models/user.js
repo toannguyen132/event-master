@@ -95,11 +95,9 @@ UserSchema.statics = {
       .populate('subscriptions')
       .exec()
       .then((user) => {
-        if (user) {
-          return user;
-        }
-        const err = new APIError('No such user exists!', httpStatus.NOT_FOUND);
-        return Promise.reject(err);
+        return user;
+        // const err = new APIError('No such user exists!', httpStatus.NOT_FOUND);
+        // return Promise.reject(err);
       });
   },
 
