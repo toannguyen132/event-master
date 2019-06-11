@@ -32,8 +32,6 @@ class CreateEvent extends Component {
       image: image.id
     }
 
-    logInfo('submitted data: ', eventData)
-
     this.props.createEvent(eventData).then(() => {
       message.success("Event has been created");
       Router.push(urls.home)
@@ -45,12 +43,12 @@ class CreateEvent extends Component {
 
 
   render() {
-
     // create default value
     const formItems = mergeOptions(mergeDefaultValue(eventForm, {
       name: "New Event",
       description: "this is an example event",
       location: 'Douglas College, 700 Royal Ave, New Westminster, BC V3M 5Z5, Canada',
+      category: this.props.categories[0].id,
       startDate: moment(),
       endDate: moment().add(1, 'day')
     }),

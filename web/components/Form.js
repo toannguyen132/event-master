@@ -71,7 +71,7 @@ class GlobalForm extends React.Component {
         <Form.Item key={item.name}>
           {getFieldDecorator(item.name, {
             rules: item.rules,
-            initialValue: item.defaultValue || item.options.length > 0 ? item.options[0].id : null,
+            initialValue: item.defaultValue || (item.options.length > 0 ? item.options[0].id : null),
           })(
             <Select placeholder={item.label}>
               {item.options.map(opt => (

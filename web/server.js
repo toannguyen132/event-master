@@ -79,6 +79,10 @@ app
       return app.render(req, res, '/search', queryParams)
     })
 
+    server.get('/firebase-messaging-sw.js', (req,res) => {
+      res.set('Content-Type', 'text/javascript').send('')
+    })
+
     server.get(/\/(profile|event\/create)/, [requireAuth], (req, res) => {
       return handle(req, res)
     })

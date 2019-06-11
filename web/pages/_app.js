@@ -10,6 +10,9 @@ import Head from 'next/head'
 import initialize from '../utils/initialize'
 import '../assets/less/style.less'
 import { setHeaderSearch } from '../redux/actions/common'
+import { message } from 'antd'
+
+// const {messaging} = firebase
 
 const authPathRex = /^\/(profile|create-event)/
 const requireAuth = (path) => authPathRex.test(path)
@@ -62,6 +65,8 @@ export default withRedux(initStore, { debug: false })(
 
     render() {
       const { Component, pageProps, store } = this.props
+
+
       return (
         <Container>
           <Head>

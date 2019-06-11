@@ -30,8 +30,17 @@ if (config.mongooseDebug) {
   });
 }
 
+const server = require('http').createServer(app)
+const io = require('socket.io')(server)
+
+io.on("connection", function() {
+  console.log('a user connected')
+});
+
+app.set("io", io)
+
 // listen on port config.port
-app.listen(config.port, () => {
+server.listen(config.port, () => {
   console.info(`server started on port ${config.port} (${config.env})`); // eslint-disable-line no-console
 });
 

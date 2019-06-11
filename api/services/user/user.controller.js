@@ -112,4 +112,20 @@ const deleteSubscription = async(req, res, next) => {
   }
 }
 
-module.exports = { profile, update, myEvents, subscribe, getSubscriptions, deleteSubscription };
+const registerNotification = async(req,res, next) => {
+  next(e)
+}
+
+const sendMessage = async(req, res, next) => {
+  const io = req.app.get('io')
+  try{
+    io.emit('message', {
+      message: 'test'
+    });
+    res.json({success: true})
+  } catch (e) {
+    next(e)
+  }
+}
+
+module.exports = { profile, update, myEvents, subscribe, getSubscriptions, deleteSubscription, registerNotification, sendMessage };

@@ -33,4 +33,10 @@ router.route('/subscribe')
 router.route('/subscribe/:id')
   .delete([isAuth, validate(paramValidation.deleteSubscription)], userController.deleteSubscription);
 
+router.route('/notification')
+  .post([isAuth], userController.registerNotification);
+
+router.route('/message')
+  .post([isAuth], userController.sendMessage);
+
 module.exports = router;

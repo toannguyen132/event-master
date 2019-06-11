@@ -23,11 +23,13 @@ const getResponseUser = (user, isAuth = false) => {
     address: user.address,
     dob: user.dob,
     notifications: user.notifications.map(item => ({
-      type: item.type,
+      id: item.id,
+      type: item.notiType,
       message: item.message,
       data: item.data,
-      read: item.read
-    }))
+      read: item.read,
+      createdAt: item.createdAt
+    })).sort((a,b) => a > b ? -1 : 1)
   }
 
   if (isAuth) {

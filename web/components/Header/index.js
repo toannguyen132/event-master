@@ -1,13 +1,15 @@
 import Link from 'next/link'
 import { connect } from 'react-redux'
-import { Avatar, Dropdown, Icon, Input, Badge } from 'antd'
+import { Avatar, Dropdown, Icon, Input, Badge, Empty, message } from 'antd'
 import Router from 'next/router'
 import styled from 'styled-components'
 import { Menu } from 'antd'
 import urls from '../../model/urls'
 import { deauthenticate } from '../../redux/actions/authentication'
+import { refreshNotifications } from '../../redux/actions/user'
 import { Component } from 'react'
-import { logInfo } from '../../utils/log';
+import io from 'socket.io-client'
+import { logInfo } from '../../utils/log'
 
 const Search = Input.Search
 
@@ -81,8 +83,45 @@ const HeaderContainer = styled.div`
   }
 `
 
+const MenuItem = styled(Menu.Item)`
+  display: block;
+  width: 200px;
+  white-space: normal;
+  border-bottom: 1px solid #fafafa;
+  background: rgba(150,150,150,0.1);
+  opacity: 0.8;
+  &.ant-dropdown-menu-item-selected{
+    opacity: 1;
+  }
+`
+const NotificationItem = styled.a`
+  display: block;
+`
+
 const welcomeName = name => `Hello, ${name ? name : 'User' }`
 
+const NotificationList = (notifications = []) => {
+  const unread = notifications.filter((n) => n.read == false).map(n => n.id)
+
+  return () => (
+    <Menu selectedKeys={unread} selectable={false}>
+      { 
+        notifications.length > 0 ? 
+          notifications.map((noti) => (
+            <MenuItem key={noti.id}>
+              <Link as={urls.showEvent(noti.data)} href={urls.showEventQuery(noti.data)}>
+                <NotificationItem href={urls.showEvent(noti.data)}>
+                  {noti.message}
+                </NotificationItem>
+              </Link>
+            </MenuItem>
+          ))
+          :
+          <Empty></Empty>
+      }
+    </Menu>
+  )
+}
 
 class LayoutHeader extends Component {
 
@@ -91,6 +130,28 @@ class LayoutHeader extends Component {
     const {currentUser} = this.props
     this.state = {
       hasNotification: currentUser.notifications && currentUser.notifications.length > 0 && currentUser.notifications.some(sub => sub.read == false )
+    }
+  }
+
+  componentDidMount() {
+    const {isLoggedIn, currentUser, refreshNotifications} = this.props
+    if (isLoggedIn) {
+      const socket = io('http://localhost:4000')
+      
+      socket.on('connect', function() {
+        logInfo('socket connected')
+        if (currentUser && currentUser.subscriptions) {
+          currentUser.subscriptions.forEach((sub) => {
+            logInfo(`follow '${sub.name}' (${sub.id})`)
+            socket.on(`cat/${sub.id}`, function(msg) {
+              logInfo('message received:', msg)
+              message.info(`message received: ${msg}`)
+              // refresh notification
+              refreshNotifications()
+            })
+          })
+        }
+      })
     }
   }
 
@@ -159,7 +220,7 @@ class LayoutHeader extends Component {
             <Avatar size={35} />
           </span>
         </Dropdown>
-        <Dropdown overlay={UserMenu}>
+        <Dropdown overlay={NotificationList(currentUser.notifications)} placement="bottomRight">
           <Badge count={hasNotification ? 1 : 0} dot>
             <span className="notification" style={{marginLeft: '15px'}} >
               <Icon type="notification" />
@@ -200,7 +261,8 @@ class LayoutHeader extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  logout: () => dispatch(deauthenticate())
+  logout: () => dispatch(deauthenticate()),
+  refreshNotifications: () => dispatch(refreshNotifications())
 })
 
 

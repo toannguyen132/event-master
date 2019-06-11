@@ -5,14 +5,16 @@ export const search = (api, criteria) => {
   })
 }
 
-export const create = (api, {name, description, startDate, endDate, location, image}) => {
+export const create = (api, {name, description, startDate, endDate, location, image, category, tickets = []}) => {
   return api.post('/event', {
     name, 
     description, 
     startDate, 
     endDate, 
     location,
-    image
+    image,
+    category,
+    tickets,
   })
 }
 

@@ -52,8 +52,9 @@ const get = async (req, res, next) => {
  * @param next
  * @returns {Promise<void>}
  */
-const create = (req, res, next) => {
+const create = async (req, res, next) => {
   const rawEvent = req.body;
+  rawEvent.category = rawEvent.category ? [rawEvent.category] : []
 
   const event = new Event({
     name: rawEvent.name,
@@ -62,19 +63,30 @@ const create = (req, res, next) => {
     startDate: rawEvent.startDate,
     endDate: rawEvent.endDate,
     image: rawEvent.image,
-    category: rawEvent.category || [],
+    category: rawEvent.category,
     tickets: rawEvent.tickets || [],
     owner: req.user.id,
     status: 'public'
   });
 
-  event.save().then(() => {
-    res.json({
-      success: true
-    })
-  }).catch(e => {
-    return next(e)
-  })
+  const currentUser = req.user;
+  try{
+    
+    // save to dâtbase
+    const savedEvent = await event.save();
+
+    const io = req.app.get('io');
+  
+    // notify
+    const tEvent = await Event.get(savedEvent);
+    _notifyNewEvent(tEvent, {exclude: currentUser.id, io: io});
+
+    // return 
+    res.json(savedEvent);
+  } catch (e) {
+    next(e)
+  }
+
 }
 
 /**
@@ -185,7 +197,10 @@ const notify = async (req, res, next) => {
   const eventId = req.params.id;
   try{
     const rawEvent = await Event.get(eventId);
-    await _notifyNewEvent(rawEvent)
+
+    const io = req.app.get('io')
+    
+    await _notifyNewEvent(rawEvent, {io: io})
 
     const users = await User.getBySubscription(rawEvent.category[0].id)
 
@@ -211,6 +226,8 @@ const _notify = async(uids, notifications) => {
       }
     })
 
+    console.log('update result: ',result)
+
     return true;
   } catch (e) {
     console.error(e)
@@ -218,14 +235,22 @@ const _notify = async(uids, notifications) => {
   }
 }
 
-const _notifyNewEvent = async (event) => {
+const _notifyNewEvent = async (event, options = {}) => {
+  const { exclude, io } = options
+
   if (!event.category || event.category.length == 0 )
     return false;
 
-  const catId = event.category[0].id;
-  const catName = event.category[0].name;
+  const completeEvent = eventHelper.refineResponseEvent(event);
+  const catId = completeEvent.category[0].id;
+  const catName = completeEvent.category[0].name;
   const users = await User.getBySubscription(catId);
-  const uids = users.map(u => u.id)
+  const uids = users.map(u => u.id).filter(uid => uid != exclude)
+
+  if (io) {
+    console.log(`emit ${catId}`)
+    io.emit(`cat/${catId}`, `A new event in ${catName} has been posted`)
+  }
   
   const notification = {
     message: `A new event in ${catName} has been posted`,
