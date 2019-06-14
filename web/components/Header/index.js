@@ -136,11 +136,11 @@ class LayoutHeader extends Component {
   componentDidMount() {
     const {isLoggedIn, currentUser, refreshNotifications} = this.props
     if (isLoggedIn) {
-      const socket = io(process.env.API_HOST)
-      
+      const socket = io(process.env.SOCKET_HOST)
+      logInfo(`socket: ${process.env.SOCKET_HOST}`)
       
       socket.on('connect', function() {
-        logInfo(`socket connected at ${process.env.API_HOST}`)
+        logInfo(`socket connected at ${process.env.SOCKET_HOST}`)
         if (currentUser && currentUser.subscriptions) {
           currentUser.subscriptions.forEach((sub) => {
             logInfo(`follow '${sub.name}' (${sub.id})`)
