@@ -24,6 +24,14 @@ app.use(methodOverride());
 // enable CORS - Cross Origin Resource Sharing
 app.use(cors());
 
+// print log
+if (process.env.NODE_ENV == 'development') {
+  app.use('/api', (req, res, next) => {
+    console.log(`${req.method} ${req.path}: query = ${JSON.stringify(req.query)}`)
+    next()
+  });
+}
+
 // mount all routes on /api path
 app.use('/api', routes);
 
