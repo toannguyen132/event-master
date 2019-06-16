@@ -22,7 +22,8 @@ const envVarsSchema = Joi.object({
     .description('Mongo DB host url'),
   MONGO_PORT: Joi.number()
     .default(27017),
-  HOST: Joi.string()
+  HOST: Joi.string(),
+  GOOGLE_API_KEY: Joi.string()
 }).unknown()
   .required();
 
@@ -37,6 +38,7 @@ const config = {
   mongooseDebug: envVars.MONGOOSE_DEBUG,
   jwtSecret: envVars.JWT_SECRET,
   host: envVars.HOST,
+  googleApiKey: envVars.GOOGLE_API_KEY,
   mongo: {
     host: envVars.MONGO_HOST,
     port: envVars.MONGO_PORT

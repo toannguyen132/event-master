@@ -56,6 +56,14 @@ const EventSchema = new mongoose.Schema({
     required: 'Location is required',
     text: true
   },
+  lat: {
+    type: Number,
+    index: true,
+  },
+  lng: {
+    type: Number,
+    index: true,
+  },
   startDate: {
     type: Date,
     index: true,

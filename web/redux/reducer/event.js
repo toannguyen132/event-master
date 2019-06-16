@@ -1,4 +1,9 @@
-import { SET_EVENTS, SET_SINGLE_EVENT, SET_CATEGORIES, SET_SEARCH_CRITERIA, SET_EVENTS_LOADING } from '../types'
+import { SET_EVENTS,
+  SET_SINGLE_EVENT,
+  SET_CATEGORIES,
+  SET_SEARCH_CRITERIA,
+  SET_EVENTS_LOADING,
+  SET_LISTENING} from '../types'
 import moment from 'moment'
 
 const initialState = {
@@ -18,7 +23,8 @@ const initialState = {
     date: '',
     from: '',
     to: ''
-  }
+  },
+  listening: {}
 }
 
 export default (state = initialState, action) => {
@@ -33,6 +39,8 @@ export default (state = initialState, action) => {
     return { ...state, search: action.payload}
   case SET_EVENTS_LOADING:
     return { ...state, loading: action.payload}
+  case SET_LISTENING:
+    return {...state, listening: { ...state.listening, [action.payload]: true }}
   default:
     return state
   }

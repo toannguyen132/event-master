@@ -1,4 +1,9 @@
-import { SET_EVENTS, SET_SINGLE_EVENT, SET_CATEGORIES, SET_SEARCH_CRITERIA, SET_EVENTS_LOADING} from '../types'
+import { SET_EVENTS,
+  SET_SINGLE_EVENT,
+  SET_CATEGORIES,
+  SET_SEARCH_CRITERIA,
+  SET_EVENTS_LOADING,
+  SET_LISTENING} from '../types'
 import apiGenerator from '../../api'
 import eventApi from '../../api/event'
 import { logError } from '../../utils/log'
@@ -36,6 +41,13 @@ export const setSearchCriteria = criteria => {
   return {
     type: SET_SEARCH_CRITERIA,
     payload: criteria
+  }
+}
+
+export const setListening = channel => {
+  return {
+    type: SET_LISTENING,
+    payload: channel
   }
 }
 
@@ -84,7 +96,7 @@ export const getCategories = () => {
     try{
       const resp = await eventApi.getEventCategories(api)
       dispatch(setCategories(resp.data))
-      
+
       return resp.data
     } catch (e) {
       logError('error:', e.message)

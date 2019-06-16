@@ -18,11 +18,16 @@ const refineSearchParams = (params) => {
 }
 
 const refineResponseEvent = (event) => {
+  const coordinate = event.lat && event.lng && {
+    lat: event.lat,
+    lng: event.lng
+  }
   return {
     id: event._id,
     name: event.name,
     description: event.description,
     location: event.location,
+    coordinate,
     category: event.category.map(cat => ({
       id: cat._id,
       name: cat.name,

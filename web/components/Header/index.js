@@ -7,6 +7,7 @@ import { Menu } from 'antd'
 import urls from '../../model/urls'
 import { deauthenticate } from '../../redux/actions/authentication'
 import { refreshNotifications } from '../../redux/actions/user'
+import { setListening } from '../../redux/actions/event'
 import { Component } from 'react'
 import io from 'socket.io-client'
 import { logInfo } from '../../utils/log'
@@ -105,8 +106,8 @@ const NotificationList = (notifications = []) => {
 
   return () => (
     <Menu selectedKeys={unread} selectable={false}>
-      { 
-        notifications.length > 0 ? 
+      {
+        notifications.length > 0 ?
           notifications.map((noti) => (
             <MenuItem key={noti.id}>
               <Link as={urls.showEvent(noti.data)} href={urls.showEventQuery(noti.data)}>
@@ -134,22 +135,26 @@ class LayoutHeader extends Component {
   }
 
   componentDidMount() {
-    const {isLoggedIn, currentUser, refreshNotifications} = this.props
+    const {isLoggedIn, currentUser, refreshNotifications, setCategoryListening, listening } = this.props
     if (isLoggedIn) {
       const socket = io(process.env.SOCKET_HOST)
-      logInfo(`socket: ${process.env.SOCKET_HOST}`)
-      
+
       socket.on('connect', function() {
         logInfo(`socket connected at ${process.env.SOCKET_HOST}`)
         if (currentUser && currentUser.subscriptions) {
           currentUser.subscriptions.forEach((sub) => {
-            logInfo(`follow '${sub.name}' (${sub.id})`)
-            socket.on(`cat/${sub.id}`, function(msg) {
-              logInfo('message received:', msg)
-              message.info(`message received: ${msg}`)
-              // refresh notification
-              refreshNotifications()
-            })
+            if (listening[sub.slug]) {
+              logInfo(`already follow '${sub.name}' (${sub.id})`)
+            } else {
+              logInfo(`follow '${sub.name}' (${sub.id})`)
+              setCategoryListening(sub.slug);
+              socket.on(`cat/${sub.id}`, function(msg) {
+                logInfo('message received:', msg)
+                message.info(`message received: ${msg}`)
+                // refresh notification
+                refreshNotifications()
+              })
+            }
           })
         }
       })
@@ -242,16 +247,16 @@ class LayoutHeader extends Component {
           <Link href="/">
             <a className="logo">EventMaster</a>
           </Link>
-          { headerSearch ? 
+          { headerSearch ?
             <Search placeholder="Search Event" allowClear={true} onSearch={onQuickSearch} />
             : null
           }
-          
+
         </div>
-        
+
         <div className="header-right">
-          { 
-            !isLoggedIn ? 
+          {
+            !isLoggedIn ?
               GuestMenu:
               UserDropdown
           }
@@ -263,14 +268,16 @@ class LayoutHeader extends Component {
 
 const mapDispatchToProps = dispatch => ({
   logout: () => dispatch(deauthenticate()),
-  refreshNotifications: () => dispatch(refreshNotifications())
+  refreshNotifications: () => dispatch(refreshNotifications()),
+  setCategoryListening: (cat) => dispatch(setListening(cat))
 })
 
 
 export default connect(
-  ({user, authentication, common}) => ({
+  ({user, authentication, common, event}) => ({
     isLoggedIn: authentication.token ? true : false,
     currentUser: user.currentUser,
-    headerSearch: common.headerSearch
+    headerSearch: common.headerSearch,
+    listening: event.listening
   }),
   mapDispatchToProps)(LayoutHeader)

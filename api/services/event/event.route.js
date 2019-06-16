@@ -16,30 +16,33 @@ router.route('/')
 router.route('/category')
   .get(eventCtrl.getCategories);
 
-/** get single event */
-router.route('/:id')
-  .get(eventCtrl.get);
-
 /** create new event */
 router.route('/')
   .post([isAuth, validate(paramValidation.createEvent)], eventCtrl.create);
-
-/** update event */
-router.route('/:id')
-  .put([isAuth, validate(paramValidation.updateEvent)], eventCtrl.update);
-
-/** upload an image to a single event */
-router.route('/:id/upload')
-  .post([isAuth, validate(paramValidation.uploadEvent), upload.single('image')], eventCtrl.upload);
 
 /** generate an event and upload image */
 router.route('/upload')
   .post([isAuth, upload.single('image')], eventCtrl.initUpload);
 
-router.route('/test')
-  .post([isAuth, upload.single('image')], eventCtrl.createTest);
+router.route('/address')
+  .get(eventCtrl.testAddress);
 
 router.route('/notify/:id')
-    .get(eventCtrl.notify);
+  .get(eventCtrl.notify);
+
+/** get single event */
+router.route('/:id')
+  .get(eventCtrl.get);
+
+/** update event */
+router.route('/:id')
+  .put([isAuth, validate(paramValidation.updateEvent)], eventCtrl.update);
+
+router.route('/:id')
+  .delete([isAuth], eventCtrl.deleteEvent);
+
+/** upload an image to a single event */
+router.route('/:id/upload')
+  .post([isAuth, validate(paramValidation.uploadEvent), upload.single('image')], eventCtrl.upload);
 
 module.exports = router;

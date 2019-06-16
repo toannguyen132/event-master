@@ -4,9 +4,12 @@ const APIError = require('../../helpers/APIError');
 const Event = require('../../models/event');
 const Category = require('../../models/category');
 const User = require('../../models/user');
+const File = require('../../models/file');
 const eventHelper = require('../../helpers/event');
 const model = require('../../helpers/model')
 const httpStatus = require('http-status');
+const google = require('../../helpers/google')
+const utils = require('../../helpers/common')
 
 const fs = require('fs');
 
@@ -56,21 +59,25 @@ const create = async (req, res, next) => {
   const rawEvent = req.body;
   rawEvent.category = rawEvent.category ? [rawEvent.category] : []
 
-  const event = new Event({
-    name: rawEvent.name,
-    description: rawEvent.description,
-    location: rawEvent.location,
-    startDate: rawEvent.startDate,
-    endDate: rawEvent.endDate,
-    image: rawEvent.image,
-    category: rawEvent.category,
-    tickets: rawEvent.tickets || [],
-    owner: req.user.id,
-    status: 'public'
-  });
-
   const currentUser = req.user;
   try{
+    // get geo location
+    const geometric = await google.getLatLng(rawEvent.location)
+  
+    const event = new Event({
+      name: rawEvent.name,
+      description: rawEvent.description,
+      location: rawEvent.location,
+      lat: geometric.location.lat,
+      lng: geometric.location.lng,
+      startDate: rawEvent.startDate,
+      endDate: rawEvent.endDate,
+      image: rawEvent.image,
+      category: rawEvent.category,
+      tickets: rawEvent.tickets || [],
+      owner: req.user.id,
+      status: 'public'
+    });
     
     // save to dâtbase
     const savedEvent = await event.save();
@@ -86,7 +93,6 @@ const create = async (req, res, next) => {
   } catch (e) {
     next(e)
   }
-
 }
 
 /**
@@ -116,6 +122,62 @@ const update = async (req, res, next) => {
 
   } catch (e) {
     next(e);
+  }
+}
+
+const _deleteEvent = async (id) => {
+  const session = await Event.startSession();
+  session.startTransaction();
+
+  try {
+    // delete attachment first
+    const event = await Event.findById(id);
+    
+    if ( !event ) throw new APIError("not event found");
+
+    if (event.image && event.image.length > 0){
+      for (const img of event.image) {
+        console.log('images: ', img)
+        const image = await File.findById(img).exec();
+
+        // delete image
+        utils.deleteUploadedFile(image.filename);
+
+        // delete data
+        await image.delete();
+        console.log(`delete image database: ${image.id}`);
+      }
+    }
+
+    await event.delete()
+    await session.commitTransaction();
+    session.endSession();
+
+    return true;
+
+  } catch (e) {
+
+    await session.abortTransaction();
+    session.endSession();
+
+    throw(e);
+  }
+}
+
+/**
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
+const deleteEvent = async(req, res, next) => {
+  try{
+    await _deleteEvent(req.params.id)
+    res.json({
+      success: true
+    });
+  } catch (e) {
+    next(e)
   }
 }
 
@@ -186,13 +248,6 @@ const getCategories = async (req, res, next) => {
   }
 }
 
-const createTest = (req, res, next) => {
-  console.log(req.body);
-  console.log(req.file);
-
-  res.json(req.body);
-}
-
 const notify = async (req, res, next) => {
   const eventId = req.params.id;
   try{
@@ -261,4 +316,26 @@ const _notifyNewEvent = async (event, options = {}) => {
   return _notify(uids, [notification])
 }
 
-module.exports = { search, get, create, update, upload, createTest, getCategories, initUpload, notify };
+const testAddress = (req, res, next) => {
+  const address = req.query.address
+  google.getLatLng(address)
+    .then(data => {
+      console.log("coordinate: ", data);
+      res.json({
+        test: data
+      })
+    })
+}
+
+module.exports = { 
+  search, 
+  get, 
+  create, 
+  update, 
+  upload,
+  getCategories, 
+  initUpload, 
+  notify,
+  deleteEvent,
+  testAddress
+ };
