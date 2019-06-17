@@ -1,5 +1,5 @@
 import Header from '../Header'
-import {Layout, message } from 'antd'
+import {Layout } from 'antd'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
 import React, { Component } from 'react'
@@ -8,7 +8,7 @@ const LayoutContent = Layout.Content
 
 export const Content = styled(LayoutContent)`
   background-color: #f8f8f8;
-  padding: 50px;
+  padding: 0 0 50px 0;
 `
 
 export const FloatedContent = styled.div`

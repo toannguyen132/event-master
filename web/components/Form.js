@@ -53,10 +53,12 @@ class GlobalForm extends React.Component {
     case 'dateTimeRange':
       // eslint-disable-next-line no-case-declarations
       // const value = item.defaultValue ? moment(item.defaultValue) : moment()
+      console.log('default value: ', item.defaultValue)
       return (
         <Form.Item key={item.name}>
           {getFieldDecorator(item.name, {
-            rules: item.rules
+            rules: item.rules,
+            initialValue: item.defaultValue
           })(
             <RangePicker 
               showTime={{format: 'HH:mm'}}

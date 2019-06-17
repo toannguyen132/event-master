@@ -8,9 +8,10 @@ import { createForm } from '../../components/Form'
 import { eventForm, mergeDefaultValue, mergeOptions } from '../../model/form'
 import moment from 'moment'
 import { createEvent, getCategories } from '../../redux/actions/event'
-import urls from '../../model/urls';
-import { message } from 'antd';
-import { logInfo } from '../../utils/log';
+import urls from '../../model/urls'
+import { message } from 'antd'
+import { logInfo } from '../../utils/log'
+import { DATE_TIME_FORMAT } from '../../utils/display'
 
 const CreateForm = createForm({name: 'create-event'})
 
@@ -49,8 +50,11 @@ class CreateEvent extends Component {
       description: "this is an example event",
       location: 'Douglas College, 700 Royal Ave, New Westminster, BC V3M 5Z5, Canada',
       category: this.props.categories[0].id,
-      startDate: moment(),
-      endDate: moment().add(1, 'day')
+      startDate: moment().set({hour: 9, minute: 0, second: 0}),
+      endDate: moment().set({hour: 18, minute: 0, second: 0}),
+      date: [
+        moment().set({hour: 9, minute: 0, second: 0}), 
+        moment().set({hour: 18, minute: 0, second: 0})]
     }),
     {
       category: {options: this.props.categories}
