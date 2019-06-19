@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const httpStatus = require('http-status');
 const APIError = require('../helpers/APIError');
 const Category = require('./category');
+const Registration = require('./registration');
 const ObjectId = mongoose.Types.ObjectId;
 
 // eslint-disable-next-line no-useless-escape
@@ -82,6 +83,7 @@ const EventSchema = new mongoose.Schema({
     default: 'public'
   },
   owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User'},
+  goingCount: {type: Number, default: 0},
   createdAt: {
     type: Date,
     index: true,
@@ -97,8 +99,12 @@ const EventSchema = new mongoose.Schema({
 /**
  * Methods
  */
-EventSchema.method({
-});
+EventSchema.methods = {
+  async updateCount() {
+    this.goingCount = await Registration.count({event: this.id})
+    await this.save()
+  }
+};
 
 /**
  * Statics
@@ -131,6 +137,15 @@ EventSchema.statics = {
       .populate('owner')
       .populate('image')
       .exec();
+  },
+
+  async updateCount(id) {
+    try {
+      const count = await Registration.countDocuments({event: id})
+      await this.updateOne({_id: id}, {goingCount: count});
+    } catch (error) {
+      throw error
+    }
   },
 
   /**

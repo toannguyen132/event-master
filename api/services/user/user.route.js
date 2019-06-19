@@ -39,4 +39,7 @@ router.route('/notification')
 router.route('/message')
   .post([isAuth], userController.sendMessage);
 
+router.route('/registration')
+  .get([isAuth], userController.getRegistrations);
+
 module.exports = router;

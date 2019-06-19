@@ -5,6 +5,7 @@ const Event = require('../../models/event');
 const Category = require('../../models/category');
 const User = require('../../models/user');
 const File = require('../../models/file');
+const Registration = require('../../models/registration');
 const eventHelper = require('../../helpers/event');
 const model = require('../../helpers/model')
 const httpStatus = require('http-status');
@@ -26,7 +27,10 @@ const search = (req, res, next) => {
 
   Event.list(filter).then(events => {
     const newEvents = events.map(event => eventHelper.refineResponseEvent(event));
-    res.json(newEvents);
+    res.json({
+      results: newEvents,
+      total: newEvents.length
+    });
   }).catch(e => {
     next(e);
   })
@@ -327,6 +331,49 @@ const testAddress = (req, res, next) => {
     })
 }
 
+/**
+ * register
+ */
+const registerEvent = async (req, res, next) => {
+  try {
+    // find for duplication
+    const registration = await Registration.getByEventAndUser(req.params.id, req.user.id)
+    if (registration) throw new APIError("You have already registered for this event", httpStatus.BAD_REQUEST, true)
+  
+    const reg = new Registration({
+      event: req.params.id,
+      user: req.user.id
+    });
+
+    const result = await reg.save();
+
+    //update count
+    Event.updateCount(req.params.id);
+
+    res.json(result)
+  } catch (e) {
+    console.log('error occurs')
+    next(e)
+  }
+}
+
+const deregisterEvent = async (req, res, next) => {
+  try {
+    const register = await Registration.getByEventAndUser(req.params.id, req.user.id)
+    if (!register) {
+      throw new APIError("You are not register for this event yet", httpStatus.BAD_REQUEST, true)
+    }
+
+    await register.delete();
+    //update count
+    Event.updateCount(req.params.id);
+
+    res.json({success: true, message: "you have remove registration"})
+  } catch (e) {
+    next(e)
+  }
+}
+
 module.exports = { 
   search, 
   get, 
@@ -337,5 +384,7 @@ module.exports = {
   initUpload, 
   notify,
   deleteEvent,
-  testAddress
+  testAddress,
+  registerEvent,
+  deregisterEvent
  };

@@ -30,6 +30,7 @@ router.route('/address')
 router.route('/notify/:id')
   .get(eventCtrl.notify);
 
+
 /** get single event */
 router.route('/:id')
   .get(eventCtrl.get);
@@ -40,6 +41,14 @@ router.route('/:id')
 
 router.route('/:id')
   .delete([isAuth], eventCtrl.deleteEvent);
+
+/** register for event */
+router.route('/:id/register')
+  .post([isAuth], eventCtrl.registerEvent);
+
+/** register for event */
+router.route('/:id/register')
+  .delete([isAuth], eventCtrl.deregisterEvent);
 
 /** upload an image to a single event */
 router.route('/:id/upload')

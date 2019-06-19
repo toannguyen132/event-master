@@ -2,6 +2,7 @@ const APIError = require('../../helpers/APIError');
 const User = require('../../models/user');
 const Event = require('../../models/event');
 const Category = require('../../models/category');
+const Registration = require('../../models/registration');
 const model = require('../../helpers/model');
 const eventHelper = require('../../helpers/event');
 const mongoose = require('mongoose');
@@ -37,6 +38,7 @@ const update = async(req, res, next) => {
 const myEvents = async(req, res, next) => {
   try {
     const rawEvents = await Event.getByOwner(req.user.id)
+
     const events = rawEvents.map(event => eventHelper.refineResponseEvent(event));
 
     res.json(events);
@@ -128,4 +130,40 @@ const sendMessage = async(req, res, next) => {
   }
 }
 
-module.exports = { profile, update, myEvents, subscribe, getSubscriptions, deleteSubscription, registerNotification, sendMessage };
+const getRegistrations = async(req, res, next) => {
+  try {
+    const events = await Registration.getByUser(req.user.id);
+
+    const resp = events.map(record => {
+      const event = record.event.toJSON();
+      event.id = event._id;
+      delete event._id;
+      delete event.__v;
+
+      return {
+        ...record.toJSON(),
+        event: event
+      }
+    })
+
+    res.json({
+      results: resp,
+      total: events.length
+    });
+
+  } catch(error) {
+    next(error)
+  }
+}
+
+module.exports = { 
+  profile, 
+  update, 
+  myEvents, 
+  subscribe, 
+  getSubscriptions, 
+  deleteSubscription, 
+  registerNotification, 
+  sendMessage,
+  getRegistrations
+};
