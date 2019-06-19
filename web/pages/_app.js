@@ -10,7 +10,6 @@ import Head from 'next/head'
 import initialize from '../utils/initialize'
 import '../assets/less/style.less'
 import { setHeaderSearch } from '../redux/actions/common'
-import { message } from 'antd'
 
 // const {messaging} = firebase
 

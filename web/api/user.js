@@ -7,6 +7,7 @@ export const updateProfile = (api, data) => {
   return api.post('/user/profile', data)
 }
 
+// eslint-disable-next-line no-unused-vars
 export const getMyEvents = (api, filter) => {
   return api.get('/user/my-events')
 }
@@ -18,8 +19,11 @@ export const subscribe = (api, catId) => {
 }
 
 export const unsubscribe = (api, catId) => {
-  console.log('api ubsubscribe')
   return api.delete(`/user/subscribe/${catId}`)
+}
+
+export const getRegistrationsApi = (api) => {
+  return api.get('/user/registration').then(resp => resp.data)
 }
 
 export default {

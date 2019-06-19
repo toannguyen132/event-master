@@ -166,9 +166,7 @@ class LayoutHeader extends Component {
     const {hasNotification} = this.state
 
     const logUserOut = () => {
-      logout().then(() => {
-        Router.push(urls.home)
-      })
+      logout()
     }
 
     const UserMenu = (
@@ -199,7 +197,7 @@ class LayoutHeader extends Component {
         </Menu.Item>
         <Menu.Divider />
         <Menu.Item key="logout">
-          <div onClick={() => logUserOut()}>
+          <div onClick={logUserOut}>
             <Icon type="logout" />&nbsp;&nbsp;
             Log Out
           </div>

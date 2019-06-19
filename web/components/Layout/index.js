@@ -2,13 +2,13 @@ import Header from '../Header'
 import {Layout } from 'antd'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
-import React, { Component } from 'react'
+import { Component } from 'react'
 
 const LayoutContent = Layout.Content
 
 export const Content = styled(LayoutContent)`
   background-color: #f8f8f8;
-  padding: 0 0 50px 0;
+  padding: 30px 50px 50px 50px;
 `
 
 export const FloatedContent = styled.div`

@@ -6,6 +6,7 @@ import { SET_EVENTS,
   SET_LISTENING} from '../types'
 import apiGenerator from '../../api'
 import eventApi from '../../api/event'
+import { fetchRegistrations } from '../actions/user'
 import { logError } from '../../utils/log'
 
 /**
@@ -61,9 +62,9 @@ export const searchEvents = (criteria = {}) => {
     dispatch(setEventsLoading(true))
     try{
       const resp = await eventApi.search(api, criteria)
-      dispatch(setEvents(resp.data))
+      dispatch(setEvents(resp.data.results))
       dispatch(setEventsLoading(false))
-      return resp.data
+      return resp.data.results
     } catch (e) {
       logError('error:', e.message)
       logError('error stack:', e.stack)
@@ -122,6 +123,33 @@ export const getEvent = id => {
   }
 }
 
+export const register = (id) => {
+  return async (dispatch, getState) => {
+    const token = getState().authentication.token
+    const api = apiGenerator(token)
+    try {
+      const res = await eventApi.registerEventApi(api, id)
+      dispatch(fetchRegistrations())
+      return res.data
+    } catch(error) {
+      throw error
+    }
+  }
+}
+
+export const deregister = (id) => {
+  return async (dispatch, getState) => {
+    const token = getState().authentication.token
+    const api = apiGenerator(token)
+    try {
+      const res = await eventApi.deregisterEventApi(api, id)
+      dispatch(fetchRegistrations())
+      return res.data
+    } catch(error) {
+      throw error
+    }
+  }
+}
 
 export default {
   setEvents,

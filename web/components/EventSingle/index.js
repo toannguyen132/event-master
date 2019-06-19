@@ -1,10 +1,13 @@
 import { Component } from 'react'
 import {connect} from 'react-redux'
+import Router from 'next/router'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
-import { Row, Col, Button } from 'antd'
+import { Row, Col, Button, message, Spin } from 'antd'
+import {register, deregister} from '../../redux/actions/event'
+import {fetchRegistrations} from '../../redux/actions/user'
 import { logInfo } from '../../utils/log'
-import _ from 'lodash'
+import urls from '../../model/urls'
 
 const defaultImage = '/static/img/thumb.jpg'
 
@@ -71,6 +74,7 @@ class EventSingle extends Component {
   
   static propTypes = {
     event: PropTypes.shape({
+      id: PropTypes.string,
       name: PropTypes.string,
       location: PropTypes.string,
       description: PropTypes.string,
@@ -82,12 +86,54 @@ class EventSingle extends Component {
     }).isRequired
   }
 
-  state = {  }
+  state = { 
+    registerLoading: false,
+  }
+
+  handleRegister = async() => {
+    if (!this.props.isLogged) {
+      Router.push(urls.login)
+    } else {
+      const isRegistered = this.props.registrations.some((record) => {
+        return record.event.id == this.props.event.id
+      })
+      try {
+        const {event} = this.props
+        logInfo('event', event.id)
+  
+        if (event.id) {
+          this.setState({registerLoading: true})
+          if (isRegistered) {
+            await this.props.deregisterEvent(event.id)
+            message.success('You deregister this event successfully')
+          } else {
+            await this.props.registerEvent(event.id)
+            message.success('Register for event successfully')
+          }
+          
+          this.setState({registerLoading: false})
+        }  
+      } catch (error) {
+        this.setState({registerLoading: false})
+        message.error(error.message)
+      }
+    }
+  }
+
+  componentDidMount() {
+    if (this.props.isLogged) {
+      this.props.fetchRegistrations()
+    }
+  }
 
   render() { 
-    const { name, images, owner, description, location} = this.props.event
+    const { name, images, owner, description, location, id} = this.props.event
     const imageUrl = images && images.length > 0 ? `/uploads/${images[0].filename}` : defaultImage
     // const imageUrl = _.get(images, '[0].filename', defaultImage)
+
+    const isRegistered = this.props.registrations.some((record) => {
+      return record.event.id == id
+    })
 
     return ( 
       <Wrapper>
@@ -99,7 +145,11 @@ class EventSingle extends Component {
             <HeadInfo>
               <h1 className="name">{name}</h1>
               <p className="author">by <strong>{owner && owner.name || 'author'}</strong></p>
-              <Button type="primary" size="large" block>Register</Button>
+              <Spin spinning={this.state.registerLoading}>
+                <Button type="primary" size="large" onClick={this.handleRegister} block>
+                  {isRegistered ? 'Unregister' : 'Register' }
+                </Button>
+              </Spin>
             </HeadInfo>
           </Col>
         </Row>
@@ -120,8 +170,16 @@ class EventSingle extends Component {
   }
 }
 
-const mapStateToProps = ({event}) => ({
-  event: event.currentEvent
+const mapStateToProps = ({event, authentication, user}) => ({
+  event: event.currentEvent,
+  isLogged: !!authentication.token,
+  registrations: user.registrations,
 })
 
-export default connect(mapStateToProps, null)(EventSingle)
+const mapDispatchToProps = (dispatch) => ({
+  deregisterEvent: id => dispatch(deregister(id)),
+  registerEvent: id => dispatch(register(id)),
+  fetchRegistrations: () => dispatch(fetchRegistrations())
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(EventSingle)

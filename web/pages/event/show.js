@@ -5,8 +5,10 @@ import Wrapper from '../../components/Layout'
 import { getEvent } from '../../redux/actions/event'
 import EventSingle from '../../components/EventSingle'
 import { message } from 'antd';
-import { logError } from '../../utils/log'
+import { logError, logInfo } from '../../utils/log'
 import { redirect } from '../../utils/basic'
+import { getCookie } from '../../utils/cookie'
+import initialize from '../../utils/initialize'
 
 class ShowEvent extends Component {
   render() {
@@ -20,6 +22,8 @@ class ShowEvent extends Component {
 
 ShowEvent.getInitialProps = async function(ctx) {
   try {
+    logInfo('token:', ctx.store.getState().authentication)
+
     const id = ctx.query.id || null
     if ( id ) {
       const event = await ctx.store.dispatch(getEvent(id))

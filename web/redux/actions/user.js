@@ -1,9 +1,9 @@
-import { SET_USER, SET_CURRENT_USER, SET_SUBSCRIPTION, SET_NOTIFICATIONS } from '../types'
+import { SET_USER, SET_CURRENT_USER, SET_SUBSCRIPTION, SET_NOTIFICATIONS, SET_REGISTRATION } from '../types'
 import apiGenerator from '../../api'
-import userApi, {subscribe, unsubscribe} from '../../api/user'
+import userApi, {subscribe, unsubscribe, getRegistrationsApi} from '../../api/user'
 import _ from 'lodash'
 import getError from '../../utils/error'
-import { logInfo } from '../../utils/log';
+import { logInfo } from '../../utils/log'
 
 /**
  * NORMAL ACTIONS
@@ -30,6 +30,11 @@ export const setSubscriptions = subscriptions => ({
 export const setNotifications = notifications => ({
   type: SET_NOTIFICATIONS,
   payload: notifications
+})
+
+export const setRegistrations = registrations => ({
+  type: SET_REGISTRATION,
+  payload: registrations
 })
 
 /**
@@ -121,6 +126,23 @@ export const refreshNotifications = () => {
       dispatch(setNotifications(notifications))
 
       return resp.data
+    } catch (e) {
+      throw getError(e)
+    }
+  }
+}
+
+export const fetchRegistrations = () => {
+  return async (dispatch, getState) => {
+    try{
+      const token = getState().authentication.token
+      const api = apiGenerator(token)
+
+      const data = await getRegistrationsApi(api)
+
+      dispatch(setRegistrations(data.results))
+
+      return data
     } catch (e) {
       throw getError(e)
     }

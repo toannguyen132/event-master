@@ -45,21 +45,25 @@ class MyEvents extends Component {
         dataIndex: 'category',
         key: 'category',
       },
+      {
+        title: 'Going',
+        dataIndex: 'gointCount',
+        key: 'gointCount',
+      },
     ]
-    const dataSet = events.map(({id, name, startDate, images, category}) => ({
+    const dataSet = events.map(({id, name, startDate, images, category, goingCount}) => ({
       id,
       name,
       date: moment(startDate).format(DATE_TIME_FORMAT),
       image: images.length > 0 ? `/uploads/${images[0].filename}` : '/static/img/thumb.jpg',
-      category: category.length > 0 ? category[0].name : 'N/A'
+      category: category.length > 0 ? category[0].name : 'N/A',
+      gointCount: goingCount || 0
     }));
-
 
     return (
       <Layout>
         <ProfileLayout activeKey="events">
           <h1>My Events</h1>
-          
           <Table columns={columns} dataSource={dataSet} rowKey="id"/>
         </ProfileLayout>
       </Layout>

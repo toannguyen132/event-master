@@ -30,10 +30,20 @@ export const getEventCategories = (api) => {
   return api.get('/event/category')
 }
 
+export const registerEventApi = (api, id) => {
+  return api.post(`/event/${id}/register`)
+}
+
+export const deregisterEventApi = (api, id) => {
+  return api.delete(`/event/${id}/register`)
+}
+
 export default {
   search,
   create,
   uploadEventPhoto,
   getEventCategories,
-  fetch
+  fetch,
+  registerEventApi,
+  deregisterEventApi
 }
