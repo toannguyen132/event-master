@@ -20,19 +20,31 @@ const fs = require('fs');
  * @param res
  * @param next
  */
-const search = (req, res, next) => {
+const search = async (req, res, next) => {
   const params = eventHelper.refineSearchParams(req.query);
 
-  const filter = eventHelper.createSearchFilter(params)
+  const filter = eventHelper.createSearchFilter(params);
+
+  try {
+    const events = await Event.list(filter);
+    const newEvents = events.map(event => eventHelper.refineResponseEvent(event));
+
+    const count = await Event.listCount(filter);
+    res.json({
+      results: newEvents,
+      total: count
+    });  
+  } catch (error) {
+    next(error);
+  }
 
   Event.list(filter).then(events => {
-    const newEvents = events.map(event => eventHelper.refineResponseEvent(event));
+    
     res.json({
       results: newEvents,
       total: newEvents.length
     });
   }).catch(e => {
-    next(e);
   })
 
 }

@@ -1,5 +1,5 @@
 
-const EVENT_PER_PAGE = 50;
+const EVENT_PER_PAGE = 2;
 
 /**
  *
@@ -68,6 +68,8 @@ const createSearchFilter = (params) => {
     category: params.category,
     fromDate: params.fromDate,
     toDate: params.toDate,
+    limit: params.limit,
+    skip: params.skip
   }
   const newFilters = {}
   Object.keys(filter).forEach( key => {

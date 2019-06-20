@@ -183,6 +183,25 @@ EventSchema.statics = {
       .exec();
   },
 
+  listCount({ s="", location = "", category = "", fromDate = new Date(), toDate = null}) {
+    const today = new Date()
+
+    const filter = {}
+
+    // apply text search
+    if (s) filter['$text'] = {'$search': s}
+
+    // apply category
+    if (category) filter.category = ObjectId(category)
+
+    // apply date
+    if (fromDate || toDate) filter.startDate = {}
+    if (fromDate) filter.startDate['$gte'] = fromDate
+    if (toDate) filter.startDate['$lte'] = toDate
+
+    return this.countDocuments(filter).exec();
+  }
+
 };
 
 /**
