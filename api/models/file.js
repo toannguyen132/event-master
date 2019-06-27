@@ -13,6 +13,10 @@ const FileSchema = new mongoose.Schema({
     index: true,
     required: 'Filename is required',
   },
+  thumbnail: {
+    type: String,
+    trim: true,
+  },
   type: {
     type: String,
     enum: ['event', 'avatar'],
