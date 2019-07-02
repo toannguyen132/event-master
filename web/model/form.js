@@ -4,7 +4,7 @@ export const eventForm = [
   {
     name: 'image',
     label: 'Image',
-    rules: [{ required: true, message: 'Please upload image!' }],
+    rules: [], //[{ required: true, message: 'Please upload image!' }],
     type: 'upload'
   },
   {
@@ -38,6 +38,16 @@ export const eventForm = [
     rules: [{ required: true, message: 'Please input start date' }],
     label: ['From Date', 'To Date'],
     type: 'dateTimeRange',
+  },
+  // {
+  //   name: 'togglePrice',
+  //   type: 'switch',
+  //   defaultValue: false,
+  // },
+  {
+    name: 'tickets',
+    type: 'tickets',
+    baseOnKey: 'togglePrice',
   }
 ]
 

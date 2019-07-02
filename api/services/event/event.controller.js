@@ -5,6 +5,7 @@ const Event = require('../../models/event');
 const Category = require('../../models/category');
 const User = require('../../models/user');
 const File = require('../../models/file');
+const Invoice = require('../../models/invoice');
 const Registration = require('../../models/registration');
 const eventHelper = require('../../helpers/event');
 const model = require('../../helpers/model')
@@ -13,6 +14,8 @@ const google = require('../../helpers/google')
 const utils = require('../../helpers/common')
 
 const fs = require('fs');
+const GST = 0.05;
+const PST = 0.07;
 
 /**
  * Filter events
@@ -386,6 +389,39 @@ const deregisterEvent = async (req, res, next) => {
   }
 }
 
+const createInvoice = async (req, res, next) => {
+  try {
+    const invoice = new Invoice({
+      event: req.params.id,
+      user: req.user.id,
+      name: req.body.name,
+      address: req.body.address,
+    })
+
+    // calc price
+    const quantity = req.body.quantity;
+    const price = req.body.price;
+    const subtotal = quantity * price;
+    const gstAmount = GST * subtotal;
+    const pstAmount = PST * subtotal;
+    const total = subtotal + gstAmount + pstAmount;
+
+    // assign
+    invoice.subtotal = subtotal;
+    invoice.gst = gstAmount;
+    invoice.pst = pstAmount;
+    invoice.total = total;
+
+    const result = await invoice.save();
+    res.json({
+      result: result
+    });
+
+  } catch (e) {
+    next(e);
+  }
+}
+
 module.exports = { 
   search, 
   get, 
@@ -398,5 +434,6 @@ module.exports = {
   deleteEvent,
   testAddress,
   registerEvent,
-  deregisterEvent
+  deregisterEvent,
+  createInvoice
  };

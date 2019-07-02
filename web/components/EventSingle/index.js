@@ -4,10 +4,11 @@ import Router from 'next/router'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import { Row, Col, Button, message, Spin } from 'antd'
+import BuyModal from '../BuyModal'
 import {register, deregister} from '../../redux/actions/event'
 import {fetchRegistrations} from '../../redux/actions/user'
-import { logInfo } from '../../utils/log'
 import urls from '../../model/urls'
+import { logInfo } from '../../utils/log';
 
 const defaultImage = '/static/img/thumb.jpg'
 
@@ -88,6 +89,7 @@ class EventSingle extends Component {
 
   state = { 
     registerLoading: false,
+    buyModalVisible: false,
   }
 
   handleRegister = async() => {
@@ -99,7 +101,6 @@ class EventSingle extends Component {
       })
       try {
         const {event} = this.props
-        logInfo('event', event.id)
   
         if (event.id) {
           this.setState({registerLoading: true})
@@ -120,6 +121,23 @@ class EventSingle extends Component {
     }
   }
 
+  handleOpenBuyModal = () => {
+    this.setState({
+      buyModalVisible: true
+    })
+  }
+
+  handleBuy = async () => {
+
+    this.handleCloseModal()
+  }
+
+  handleCloseModal = () => {
+    this.setState({
+      buyModalVisible: false
+    })
+  }
+
   componentDidMount() {
     if (this.props.isLogged) {
       this.props.fetchRegistrations()
@@ -127,13 +145,28 @@ class EventSingle extends Component {
   }
 
   render() { 
-    const { name, images, owner, description, location, id} = this.props.event
+    const { hasTickets } = this.props
+    const { name, images, owner, description, location, id, tickets} = this.props.event
     const imageUrl = images && images.length > 0 ? `/uploads/${images[0].filename}` : defaultImage
-    // const imageUrl = _.get(images, '[0].filename', defaultImage)
 
     const isRegistered = this.props.registrations.some((record) => {
       return record.event.id == id
     })
+
+    const getMinMax = (tickets) => {
+      let min = 999999
+      let max = 0
+      tickets.forEach(ticket => {
+        if (ticket.price < min) {
+          min = ticket.price
+        } else if (ticket.price > max) {
+          max = ticket.price
+        }
+      })
+      return [min, max]
+    }
+
+    const [min, max] = getMinMax(tickets)
 
     return ( 
       <Wrapper>
@@ -145,11 +178,21 @@ class EventSingle extends Component {
             <HeadInfo>
               <h1 className="name">{name}</h1>
               <p className="author">by <strong>{owner && owner.name || 'author'}</strong></p>
-              <Spin spinning={this.state.registerLoading}>
-                <Button type="primary" size="large" onClick={this.handleRegister} block>
-                  {isRegistered ? 'Unregister' : 'Register' }
-                </Button>
-              </Spin>
+              {
+                hasTickets ? 
+                  <React.Fragment>
+                    <p className="price">Tickets from {min != max ? `$${min} - $${max}` : `$${min}` }</p>
+                    <Button type="primary" size="large" block onClick={this.handleOpenBuyModal}>
+                      Buy Tickets
+                    </Button>
+                  </React.Fragment>
+                  : 
+                  <Spin spinning={this.state.registerLoading}>
+                    <Button type="primary" size="large" onClick={this.handleRegister} block>
+                      {isRegistered ? 'Unregister' : 'Register' }
+                    </Button>
+                  </Spin>
+              }
             </HeadInfo>
           </Col>
         </Row>
@@ -165,6 +208,12 @@ class EventSingle extends Component {
             <div className="location">{location}</div>
           </Col>
         </Row>
+        <BuyModal 
+          tickets={tickets}
+          onOk={this.handleBuy}
+          onCancel={this.handleCloseModal}
+          visible={this.state.buyModalVisible}
+        />
       </Wrapper>
     )
   }
@@ -174,6 +223,7 @@ const mapStateToProps = ({event, authentication, user}) => ({
   event: event.currentEvent,
   isLogged: !!authentication.token,
   registrations: user.registrations,
+  hasTickets: event.currentEvent.tickets.length > 0
 })
 
 const mapDispatchToProps = (dispatch) => ({

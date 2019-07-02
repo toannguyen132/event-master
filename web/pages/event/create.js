@@ -22,7 +22,7 @@ class CreateEvent extends Component {
   }
 
   handleSubmit = (values) => {
-    const {name, description, location, category, date, image} = values
+    const {name, description, location, category, date, image, tickets = []} = values
     const eventData = {
       name, 
       description,
@@ -30,7 +30,8 @@ class CreateEvent extends Component {
       category,
       startDate: date[0].format(),
       endDate: date[1].format(),
-      image: image.id
+      image: image.id,
+      tickets: tickets.filter(t => t.name && t.price)
     }
 
     this.props.createEvent(eventData).then(() => {
@@ -41,15 +42,18 @@ class CreateEvent extends Component {
     });
   }
 
-
-
   render() {
     // create default value
-    const formItems = mergeOptions(mergeDefaultValue(eventForm, {
+    let formItems = mergeOptions(mergeDefaultValue(eventForm, {
       name: "New Event",
       description: "this is an example event",
       location: 'Douglas College, 700 Royal Ave, New Westminster, BC V3M 5Z5, Canada',
       category: this.props.categories[0].id,
+      tickets: [{
+        name: "",
+        price: 0
+      }],
+      // togglePrice: false,
       startDate: moment().set({hour: 9, minute: 0, second: 0}),
       endDate: moment().set({hour: 18, minute: 0, second: 0}),
       date: [
@@ -59,6 +63,10 @@ class CreateEvent extends Component {
     {
       category: {options: this.props.categories}
     })
+
+    if (this.props.currentUser.role == 'user') {
+      formItems = formItems.filter(item => item.name !== 'tickets')
+    }
 
     return (
       <Wrapper>
@@ -89,6 +97,7 @@ const mapStateToProps = ({authentication, user}) => ({
   isLoggedIn: authentication.token ? true : false,
   currentUser: user.currentUser
 })
+
 const mapDispatchToProps = dispatch => ({
   createEvent: event => dispatch(createEvent(event))
 })

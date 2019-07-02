@@ -43,7 +43,7 @@ module.exports = {
       tickets: Joi.array().items(Joi.object().keys({
         name: Joi.string().required(),
         description: Joi.string(),
-        price: Joi.number(),
+        price: Joi.number().required(),
         number: Joi.number(),
         leftOver: Joi.number()
       }))
@@ -110,5 +110,18 @@ module.exports = {
     params: {
       id: Joi.string().required()
     }
-  }
+  },
+
+  purchase: {
+    params: {
+      id: Joi.string().required()
+    },
+    body: {
+      quantity: Joi.number().required(),
+      address: Joi.string().required(),
+      name: Joi.string().required(),
+      price: Joi.number().required(),
+    }
+  },
+
 };

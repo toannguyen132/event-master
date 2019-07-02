@@ -1,5 +1,6 @@
 /* eslint-disable */
 import React, { Component } from 'react'
+import Head from 'next/head'
 import { connect } from 'react-redux'
 import Wrapper from '../../components/Layout'
 import { getEvent } from '../../redux/actions/event'
@@ -14,6 +15,11 @@ class ShowEvent extends Component {
   render() {
     return (
       <Wrapper>
+        <Head>
+          <script
+            src={`https://www.paypal.com/sdk/js?client-id=${process.env.PAYPAL_CLIENT_ID}`}>
+          </script>
+        </Head>
         <EventSingle />
       </Wrapper>
     )

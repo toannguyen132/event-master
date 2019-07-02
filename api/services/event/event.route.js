@@ -30,7 +30,6 @@ router.route('/address')
 router.route('/notify/:id')
   .get(eventCtrl.notify);
 
-
 /** get single event */
 router.route('/:id')
   .get(eventCtrl.get);
@@ -53,5 +52,8 @@ router.route('/:id/register')
 /** upload an image to a single event */
 router.route('/:id/upload')
   .post([isAuth, validate(paramValidation.uploadEvent), upload.single('image')], eventCtrl.upload);
+
+router.route('/:id/invoice')
+  .post([isAuth, validate(paramValidation.purchase)], eventCtrl.createInvoice);
 
 module.exports = router;

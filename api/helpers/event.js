@@ -41,7 +41,10 @@ const refineResponseEvent = (event) => {
     startDate: event.startDate,
     endDate: event.endDate,
     images: event.image.map(_getImageResp),
-    tickets: event.tickets,
+    tickets: event.tickets ? event.tickets.map(t => ({
+      id: t._id,
+      ...t.toJSON()
+    })) : [],
     goingCount: event.goingCount,
     createdAt: event.createdAt
   }

@@ -22,6 +22,7 @@ const getResponseUser = (user, isAuth = false) => {
     phone: user.phone,
     address: user.address,
     dob: user.dob,
+    role: user.role,
     notifications: user.notifications.map(item => ({
       id: item.id,
       type: item.notiType,
