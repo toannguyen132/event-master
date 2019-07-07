@@ -115,7 +115,8 @@ describe('Event test', () => {
       name: "Toan Nguyen",
       address: "700 ave, New Westminster, BC, Canada",
       quantity: 2,
-      price: 100
+      price: 100,
+      ticketType: 'VIP'
     }
     let createdId;
 
@@ -124,15 +125,13 @@ describe('Event test', () => {
       headers = {'x-access-token': token};
 
       //get the first event
-      eventResp = await request(app).get('/api/event/5d158d1f6789ce40aadb9a70');
+      eventResp = await request(app).get(`/api/event/${eventId}`);
       event = eventResp.body;
-      // console.log(eventResp.body);
-
       done()
     })
 
     test('should able to buy ticket', (done) => {
-      return request(app).post('/api/event/5d158d1f6789ce40aadb9a70/invoice')
+      return request(app).post(`/api/event/${event.id}/invoice`)
         .set(headers)
         .send(sample)
         .then((res) => {

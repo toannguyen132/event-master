@@ -25,7 +25,7 @@ export default class MyDocument extends Document {
         <Head>
           {this.props.styleTags}
           <script
-            src={`https://www.paypal.com/sdk/js?client-id=${process.env.PAYPAL_CLIENT_ID}`}>
+            src={`https://www.paypal.com/sdk/js?client-id=${process.env.PAYPAL_CLIENT_ID}&currency=CAD`}>
           </script>
         </Head>
         <body>

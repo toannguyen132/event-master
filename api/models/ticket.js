@@ -3,60 +3,35 @@ const mongoose = require('mongoose');
 const httpStatus = require('http-status');
 const APIError = require('../helpers/APIError');
 const ObjectId = mongoose.Types.ObjectId;
-const Ticket = require('./ticket');
-const modelHelpers = require('../helpers/model');
+const Invoice = require('./invoice')
+const modelHelpers = require('../helpers/model')
 
-const {getRespInvoice} = modelHelpers;
+const {getRespTicket} = modelHelpers
 
 /**
  * Invoice Schema
  */
-
-const InvoiceSchema = new mongoose.Schema({
+const TicketSchema = new mongoose.Schema({
+  ticketType: {
+    type: String,
+    required: true,
+  },
   event: { 
     type: mongoose.Schema.Types.ObjectId, 
     ref: 'Event',
     required: 'Event is required',
     index: true
   }, 
-  user: { 
+  user: {
     type: mongoose.Schema.Types.ObjectId, 
     ref: 'User',
     required: 'User is required',
     index: true
   },
-  name: {
-    type: String,
-    required: 'Name is required',
-  }, 
-  address: {
-    type: String,
-    required: 'Name is required',
-  },
-  subtotal: {
-    type: Number,
-    required: 'subtotal is required'
-  },
-  gst: {
-    type: Number,
-    required: 'GST is required'
-  },
-  pst: {
-    type: Number,
-    required: 'PST is required'
-  },
-  status: {
-    type: String,
-    enum: ['pending', 'completed'],
-    default: 'completed'
-  },
-  total: {
-    type: Number,
-    required: 'total is required'
-  },
-  ticketsCount: {
-    type: Number,
-    default: 1
+  invoice: {
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'Invoice',
+    index: true
   },
   createdAt: {
     type: Date,
@@ -65,18 +40,16 @@ const InvoiceSchema = new mongoose.Schema({
   }
 });
 
-// InvoiceSchema.index({event: 1, user: 1}, {unique: true})
-
 /**
  * Methods
  */
-InvoiceSchema.method({
+TicketSchema.method({
 });
 
 /**
  * Statics
  */
-InvoiceSchema.statics = {
+TicketSchema.statics = {
   /**
    * Get user
    * @param {ObjectId} id - The objectId of user.
@@ -84,19 +57,43 @@ InvoiceSchema.statics = {
    */
   get(id) {
     return this.findById(id)
-      .populate('user')
       .populate('event')
       .exec()
       .then((item) => {
         if (item) {
-          return Ticket.getByInvoice(item.id)
-            .then(tickets => {
-              return {...getRespInvoice(item.toJSON()), tickets};
-            });
+          return item;
         }
-        const err = new APIError('No such event exists!', httpStatus.NOT_FOUND);
+        const err = new APIError('No such ticket exists!', httpStatus.NOT_FOUND);
         return Promise.reject(err);
       });
+  },
+
+  getByInvoice(invoiceId) {
+    return this.find({invoice: invoiceId})
+      // .populate('event')
+      // .populate('user')
+      .exec()
+      .then(items => {
+        if (items.length > 0) {
+          const resp = items.map(item => getRespTicket(item.toJSON()))
+          return resp;
+        }
+      })
+  },
+
+  getByUser(userId) {
+    return this.find({user: userId})
+      .populate('event')
+      .populate('user')
+      .populate('invoice')
+      .exec()
+      .then(items => {
+        if (items.length > 0) {
+          const resp = items.map(item => getRespTicket(item.toJSON()))
+          return resp;
+        }
+        return items;
+      })
   },
 
   /**
@@ -110,7 +107,6 @@ InvoiceSchema.statics = {
       .sort({ startDate: 1, createdAt: -1 })
       .skip(+skip)
       .limit(+limit)
-      .populate('user')
       .populate('event')
       .exec();
   },
@@ -120,4 +116,4 @@ InvoiceSchema.statics = {
 /**
  * @typedef User
  */
-module.exports = mongoose.model('Invoice', InvoiceSchema);
+module.exports = mongoose.model('Ticket', TicketSchema);

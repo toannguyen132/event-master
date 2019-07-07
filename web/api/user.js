@@ -26,6 +26,10 @@ export const getRegistrationsApi = (api) => {
   return api.get('/user/registration').then(resp => resp.data)
 }
 
+export const getTicketApi = (api) => {
+  return api.get('/user/tickets').then(resp => resp.data)
+}
+
 export default {
   getProfile,
   updateProfile,

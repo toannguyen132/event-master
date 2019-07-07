@@ -40,6 +40,25 @@ const getResponseUser = (user, isAuth = false) => {
   }
 }
 
+const SKIP_KEYS = ['__v','_id'];
+
+const _getRespItem = (item, extraKeys = []) => {
+  let json = item;
+  const removedProps = SKIP_KEYS.concat(extraKeys);
+  json.id = json._id;
+
+  removedProps.forEach(key => {
+    delete json[key]
+  });
+  return json
+}
+
+const getRespTicket = (ticket) => _getRespItem(ticket)
+
+const getRespInvoice = (invoice) => _getRespItem(invoice)
+
 module.exports = {
-  getResponseUser
+  getResponseUser,
+  getRespTicket,
+  getRespInvoice
 }

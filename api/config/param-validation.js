@@ -121,6 +121,7 @@ module.exports = {
       address: Joi.string().required(),
       name: Joi.string().required(),
       price: Joi.number().required(),
+      ticketType: Joi.string().required(),
     }
   },
 

@@ -16,5 +16,10 @@ export const profileMenu = [
     label: 'Subscriptions',
     icon: <Icon type="book" />,
     url: '/profile/subscriptions',
+  },{
+    key: 'tickets',
+    label: 'Tickets',
+    icon: <Icon type="book" />,
+    url: '/profile/tickets',
   },
 ]

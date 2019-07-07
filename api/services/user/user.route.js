@@ -42,4 +42,10 @@ router.route('/message')
 router.route('/registration')
   .get([isAuth], userController.getRegistrations);
 
+router.route('/tickets')
+  .get([isAuth], userController.getTickets);
+
+router.route('/printed-ticket/:id')
+  .get([isAuth], userController.getPrintedTicket);
+
 module.exports = router;

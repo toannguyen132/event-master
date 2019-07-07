@@ -38,6 +38,10 @@ export const deregisterEventApi = (api, id) => {
   return api.delete(`/event/${id}/register`)
 }
 
+export const purchaseTicketApi = (api, id, data) => {
+  return api.post(`/event/${id}/invoice`, data)
+}
+
 export default {
   search,
   create,
@@ -45,5 +49,6 @@ export default {
   getEventCategories,
   fetch,
   registerEventApi,
-  deregisterEventApi
+  deregisterEventApi,
+  purchaseTicketApi
 }

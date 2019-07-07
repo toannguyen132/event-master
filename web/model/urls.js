@@ -8,6 +8,7 @@ export default {
   profileEdit: '/profile/update',
   eventCreate: '/event/create',
   myEvents: '/profile/events',
+  myTickets: '/profile/tickets',
   search: (term) => `/search/${term}`,
   searchQuery: (term) => `/search/?search=${term}`,
   showEvent: (id) => `/event/show/${id}`,

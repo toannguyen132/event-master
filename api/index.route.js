@@ -3,6 +3,7 @@ const authRoutes = require('./services/auth/auth.route');
 const eventRoutes = require('./services/event/event.route');
 const userRoutes = require('./services/user/user.route');
 const uploadRoutes = require('./services/upload/upload.route');
+const invoiceRoutes = require('./services/invoice/invoice.route');
 
 const router = express.Router(); // eslint-disable-line new-cap
 
@@ -18,5 +19,6 @@ router.use('/auth', authRoutes);
 router.use('/event', eventRoutes);
 router.use('/user', userRoutes);
 router.use('/upload', uploadRoutes);
+router.use('/invoice', invoiceRoutes);
 
 module.exports = router;

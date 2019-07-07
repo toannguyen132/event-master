@@ -87,7 +87,7 @@ UserSchema.statics = {
   get(id) {
     const query = this.findById(id)
     return query
-    .populate('subscriptions')
+      .populate('subscriptions')
       .exec()
       .then((user) => {
         if (user) {

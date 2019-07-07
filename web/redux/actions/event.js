@@ -151,10 +151,28 @@ export const deregister = (id) => {
   }
 }
 
+export const purchaseTicket = (id, data) => {
+  return async (dispatch, getState) => {
+    const token = getState().authentication.token
+    const api = apiGenerator(token)
+    try {
+      const { name, address, quanity, price, ticketType, quantity} = data
+      const res = await eventApi.purchaseTicketApi(api, id, {
+        name, address, quanity, price, ticketType, quantity
+      })
+      
+      return res.data
+    } catch(error) {
+      throw error
+    }
+  }
+}
+
 export default {
   setEvents,
   fetchEvent: searchEvents,
   createEvent,
   getCategories,
-  setSearchCriteria
+  setSearchCriteria,
+  purchaseTicket
 }

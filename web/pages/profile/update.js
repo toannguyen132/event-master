@@ -28,9 +28,11 @@ class Update extends Component {
   }
 
   handleDatePicker = (value) => {
-    this.props.form.setFieldsValue({
-      dob: value.format()
-    })
+    if (value) {
+      this.props.form.setFieldsValue({
+        dob: value.format()
+      })
+    }
   }
 
   render() {

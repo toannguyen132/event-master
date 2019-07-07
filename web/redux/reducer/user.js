@@ -1,4 +1,4 @@
-import { SET_USER, SET_CURRENT_USER, SET_SUBSCRIPTION, SET_NOTIFICATIONS, SET_REGISTRATION} from '../types'
+import { SET_USER, SET_CURRENT_USER, SET_SUBSCRIPTION, SET_NOTIFICATIONS, SET_REGISTRATION, SET_TICKETS} from '../types'
 
 const initialState = {
   user: {
@@ -17,7 +17,8 @@ const initialState = {
     subscriptions: [],
     notifications: []
   },
-  registrations: []
+  registrations: [],
+  tickets: []
 }
 
 export default (state = initialState, action) => {
@@ -32,6 +33,8 @@ export default (state = initialState, action) => {
     return {...state, currentUser: { ...state.currentUser, notifications: action.payload}}
   case SET_REGISTRATION:
     return { ...state, registrations: action.payload }
+  case SET_TICKETS:
+    return { ...state, tickets: action.payload }
   default:
     return state
   }

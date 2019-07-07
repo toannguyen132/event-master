@@ -195,6 +195,14 @@ class LayoutHeader extends Component {
             </div>
           </Link>
         </Menu.Item>
+        <Menu.Item key="my-tickets">
+          <Link href={urls.myTickets}>
+            <div>
+              <Icon type="unordered-list" />&nbsp;&nbsp;
+              My Tickets
+            </div>
+          </Link>
+        </Menu.Item>
         <Menu.Divider />
         <Menu.Item key="logout">
           <div onClick={logUserOut}>

@@ -1,4 +1,5 @@
 // const httpStatus = require('http-status');
+const mongoose = require('mongoose');
 const APIError = require('../../helpers/APIError');
 // const config = require('../../config/config');
 const Event = require('../../models/event');
@@ -6,6 +7,7 @@ const Category = require('../../models/category');
 const User = require('../../models/user');
 const File = require('../../models/file');
 const Invoice = require('../../models/invoice');
+const Ticket = require('../../models/ticket');
 const Registration = require('../../models/registration');
 const eventHelper = require('../../helpers/event');
 const model = require('../../helpers/model')
@@ -389,14 +391,59 @@ const deregisterEvent = async (req, res, next) => {
   }
 }
 
+const _createInvoice = async({invoice, tickets}) => {
+  // const session = await mongoose.startSession();
+  // session.startTransaction();
+  let savedInvoice = null
+  let savedTickets = []
+  try{
+    savedInvoice = await (new Invoice(invoice)).save();
+
+    savedTickets = [];
+    let updatedTicket = null;
+    let savedticket = null
+
+    for (const ticket of tickets) {
+      updatedTicket = ticket;
+      updatedTicket.invoice = savedInvoice.id;
+
+      savedticket = await (new Ticket(ticket)).save();
+
+      savedTickets.push(savedticket);
+    }
+
+    // await session.commitTransaction();
+    // await session.endSession();
+    return await Invoice.get(savedInvoice.id);
+  } catch (e) {
+    if (savedInvoice.id) {
+      await savedInvoice.delete();
+    }
+    for (let t of savedTickets){
+      if (t.id) 
+        await t.delete()
+    }
+    // await session.abortTransaction();
+    // await session.endSession()
+    throw e;
+  }
+}
+
 const createInvoice = async (req, res, next) => {
   try {
-    const invoice = new Invoice({
+    // const invoice = new Invoice({
+    //   event: req.params.id,
+    //   user: req.user.id,
+    //   name: req.body.name,
+    //   address: req.body.address,
+    // })
+
+    const invoice = {
       event: req.params.id,
       user: req.user.id,
       name: req.body.name,
-      address: req.body.address,
-    })
+      address: req.body.address
+    }
 
     // calc price
     const quantity = req.body.quantity;
@@ -411,8 +458,23 @@ const createInvoice = async (req, res, next) => {
     invoice.gst = gstAmount;
     invoice.pst = pstAmount;
     invoice.total = total;
+    invoice.ticketsCount = quantity;
 
-    const result = await invoice.save();
+    // const result = await invoice.save();
+    // tickets 
+    const tickets = [];
+    const ticketType = req.body.ticketType;
+    for (let i = 0; i < quantity; i++) {
+      tickets.push({
+        ticketType,
+        event: req.params.id,
+        user: req.user.id
+      })
+    }
+
+    // const result = null;
+    const result = await _createInvoice({invoice, tickets})
+
     res.json({
       result: result
     });

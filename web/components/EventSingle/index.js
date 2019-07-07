@@ -8,7 +8,6 @@ import BuyModal from '../BuyModal'
 import {register, deregister} from '../../redux/actions/event'
 import {fetchRegistrations} from '../../redux/actions/user'
 import urls from '../../model/urls'
-import { logInfo } from '../../utils/log';
 
 const defaultImage = '/static/img/thumb.jpg'
 
