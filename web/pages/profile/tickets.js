@@ -17,7 +17,7 @@ import { getMyTickets } from '../../redux/actions/user'
 class MyTickets extends Component {
 
   render() {
-    const {tickets} = this.props
+    const {tickets, token} = this.props
 
     const columns = [
       {
@@ -43,8 +43,10 @@ class MyTickets extends Component {
         title: '',
         dataIndex: 'actions',
         key: 'actions',
-        render: () => (
-          <Icon type="printer"></Icon>
+        render: (text, item) => (
+          <a target="_blank" href={urls.printedTicket(item.id, token)}>
+            <Icon type="printer"></Icon>
+          </a>
         )
       }
     ]
@@ -81,6 +83,7 @@ MyTickets.getInitialProps = async function(ctx) {
 }
 
 const mapStateToProps = ({authentication, user}) => ({
+  token: authentication.token,
   isLoggedIn: authentication.token ? true : false,
   currentUser: user.currentUser
 })

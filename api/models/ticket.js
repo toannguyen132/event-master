@@ -70,6 +70,7 @@ TicketSchema.statics = {
 
   getByInvoice(invoiceId) {
     return this.find({invoice: invoiceId})
+      .sort({ createdAt: -1 })
       // .populate('event')
       // .populate('user')
       .exec()
@@ -83,6 +84,7 @@ TicketSchema.statics = {
 
   getByUser(userId) {
     return this.find({user: userId})
+      .sort({ createdAt: -1 })
       .populate('event')
       .populate('user')
       .populate('invoice')

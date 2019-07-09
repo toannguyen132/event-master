@@ -4,6 +4,7 @@ const Event = require('../../models/event');
 const Category = require('../../models/category');
 const Registration = require('../../models/registration');
 const Ticket = require('../../models/ticket');
+const Invoice = require('../../models/invoice');
 const model = require('../../helpers/model');
 const eventHelper = require('../../helpers/event');
 const mongoose = require('mongoose');
@@ -253,6 +254,37 @@ const getPrintedTicket = async (req, res, next) => {
   }
 }
 
+const getStatistic = async (req, res, next) => {
+  try {
+    const eventCount = await Event.getCountByOwner(req.user.id);
+    const earn = await User.getEarning(req.user.id);
+    const ticketsSold = await User.getTicketSold(req.user.id);
+
+    res.send({
+      eventCount: eventCount,
+      earn: earn,
+      ticketsSold: ticketsSold
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+const getSales = async (req, res, next) => {
+  try {
+    const saleInvoices = await User.getSaleInvoices(req.user.id, {});
+
+    const response = saleInvoices.map( invoice => model.getRespInvoice(invoice.toJSON()));
+
+    res.send({
+      results: response,
+      total: saleInvoices.length
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
 module.exports = { 
   profile, 
   update, 
@@ -264,5 +296,7 @@ module.exports = {
   sendMessage,
   getRegistrations,
   getTickets,
-  getPrintedTicket
+  getPrintedTicket,
+  getStatistic,
+  getSales
 };

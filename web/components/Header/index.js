@@ -179,11 +179,19 @@ class LayoutHeader extends Component {
             </div>
           </Link>
         </Menu.Item>
+        <Menu.Item key="dashboard">
+          <Link href={urls.dashboard}>
+            <div>
+              <Icon type="dashboard" />&nbsp;&nbsp;
+              Dashboard
+            </div>
+          </Link>
+        </Menu.Item>
         <Menu.Item key="profile">
           <Link href={urls.profile}>
             <div>
               <Icon type="user" />&nbsp;&nbsp;
-              profile
+              Profile
             </div>
           </Link>
         </Menu.Item>
@@ -198,7 +206,7 @@ class LayoutHeader extends Component {
         <Menu.Item key="my-tickets">
           <Link href={urls.myTickets}>
             <div>
-              <Icon type="unordered-list" />&nbsp;&nbsp;
+              <Icon type="credit-card" />&nbsp;&nbsp;
               My Tickets
             </div>
           </Link>

@@ -3,6 +3,7 @@ import moment from 'moment'
 export const TYPE_DATE = 'TYPE_DATE'
 export const TYPE_DATETIME = 'TYPE_DATETIME'
 export const TYPE_STRING = 'TYPE_STRING'
+export const TYPE_MONEY = 'TYPE_MONEY'
 export const types = {
   TYPE_DATE,
   TYPE_STRING
@@ -28,6 +29,8 @@ export const display = (value, type = TYPE_STRING) => {
     return displayFallback(moment(value).format('MMM DD, YYYY'))
   case TYPE_DATETIME:
     return displayFallback(moment(value).format('HH:mm MMM DD, YYYY '))
+  case TYPE_MONEY:
+    return displayFallback(value.toLocaleString('en-CA', {style: 'currency', currency: 'CAD'}))
   default:
     return displayFallback(value)
   }

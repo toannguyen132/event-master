@@ -2,6 +2,9 @@ const Promise = require('bluebird');
 const mongoose = require('mongoose');
 const httpStatus = require('http-status');
 const APIError = require('../helpers/APIError');
+const Invoice = require('./invoice');
+const Event = require('./event');
+const Ticket = require('./ticket');
 
 // eslint-disable-next-line no-useless-escape
 // const validateEmail = email => /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
@@ -121,6 +124,31 @@ UserSchema.statics = {
       .then((user) => {
         return user;
       });
+  },
+
+  async getEarning(userId) {
+    const events = await Event.getByOwner(userId);
+    const eventIds = events.map(event => event.id);
+    const invoices = await Invoice.getByEvents(eventIds);
+    const total = invoices.reduce((sum, invoice) => (sum + invoice.total), 0);
+    return total
+  },
+
+  async getTicketSold(userId) {
+    const events = await Event.getByOwner(userId);
+    const eventIds = events.map(event => event.id);
+    const invoices = await Invoice.getByEvents(eventIds);
+    const total = invoices.reduce((sum, invoice) => (sum + invoice.ticketsCount), 0);
+    return total;
+  },
+
+  async getSaleInvoices(userId, options = {}) {
+    const {page = 0, pageSize = 20} = options;
+    const events = await Event.getByOwner(userId);
+    const eventIds = events.map(event => event.id);
+    const invoices = await Invoice.getByEvents(eventIds);
+
+    return invoices;
   }
 };
 

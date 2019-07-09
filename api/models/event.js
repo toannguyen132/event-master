@@ -139,6 +139,11 @@ EventSchema.statics = {
       .exec();
   },
 
+  getCountByOwner(userId) {
+    return this.countDocuments({owner: userId})
+      .exec();
+  },
+
   async updateCount(id) {
     try {
       const count = await Registration.countDocuments({event: id})

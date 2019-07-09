@@ -1,6 +1,6 @@
-import { SET_USER, SET_CURRENT_USER, SET_SUBSCRIPTION, SET_NOTIFICATIONS, SET_REGISTRATION } from '../types'
+import { SET_USER, SET_CURRENT_USER, SET_SUBSCRIPTION, SET_NOTIFICATIONS, SET_REGISTRATION, SET_TICKETS, SET_STATISTIC } from '../types'
 import apiGenerator from '../../api'
-import userApi, {subscribe, unsubscribe, getRegistrationsApi, getTicketApi} from '../../api/user'
+import userApi, {subscribe, unsubscribe, getRegistrationsApi, getTicketApi, getStatisticApi, getSalesApi} from '../../api/user'
 import _ from 'lodash'
 import getError from '../../utils/error'
 import { logInfo } from '../../utils/log'
@@ -38,8 +38,13 @@ export const setRegistrations = registrations => ({
 })
 
 export const setTickets = tickets => ({
-  type: SET_REGISTRATION,
+  type: SET_TICKETS,
   payload: tickets
+})
+
+export const setStatistic = ({ticketsSold, earn, eventCount}) => ({
+  type: SET_STATISTIC,
+  payload: {ticketsSold, earn, eventCount}
 })
 
 /**
@@ -171,9 +176,42 @@ export const getMyTickets = () => {
   }
 }
 
+export const getStatistic = () => {
+  return async (dispatch, getState) => {
+    try{
+      const token = getState().authentication.token
+      const api = apiGenerator(token)
+
+      const data = await getStatisticApi(api)
+
+      dispatch(setStatistic(data))
+
+      return data
+    } catch (e) {
+      throw getError(e)
+    }
+  }
+}
+
+export const getSales = (options = {}) => {
+  return async (dispatch, getState) => {
+    try{
+      const token = getState().authentication.token
+      const api = apiGenerator(token)
+
+      const data = await getSalesApi(api, options)
+      return data
+    } catch (e) {
+      throw getError(e)
+    }
+  }
+}
+
 export default {
   getProfile,
   setCurrentUser,
   setUser,
   refreshNotifications,
+  getStatistic,
+  getSales
 }

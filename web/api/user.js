@@ -30,6 +30,14 @@ export const getTicketApi = (api) => {
   return api.get('/user/tickets').then(resp => resp.data)
 }
 
+export const getStatisticApi = (api) => {
+  return api.get('/user/statistic').then(resp => resp.data)
+}
+
+export const getSalesApi = (api) => {
+  return api.get('/user/sales').then(resp => resp.data)
+}
+
 export default {
   getProfile,
   updateProfile,

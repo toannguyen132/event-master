@@ -99,6 +99,11 @@ InvoiceSchema.statics = {
       });
   },
 
+  getByEvents(eventIds) {
+    return this.find({event: {$in: eventIds}})
+      .exec()
+  },
+
   /**
    * List users in descending order of 'createdAt' timestamp.
    * @param {number} skip - Number of users to be skipped.

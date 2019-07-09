@@ -48,4 +48,10 @@ router.route('/tickets')
 router.route('/printed-ticket/:id')
   .get([isAuth], userController.getPrintedTicket);
 
+router.route('/statistic/')
+  .get([isAuth], userController.getStatistic);
+
+router.route('/sales/')
+  .get([isAuth], userController.getSales);
+
 module.exports = router;

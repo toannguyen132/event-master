@@ -2,6 +2,12 @@ import {Icon} from 'antd'
 
 export const profileMenu = [
   {
+    key: 'dashboard',
+    label: 'Dashboard',
+    icon: <Icon type="dashboard" />,
+    url: '/profile/dashboard',
+  },
+  {
     key: 'profile',
     label: 'Profile',
     icon: <Icon type="user" />,
@@ -18,8 +24,8 @@ export const profileMenu = [
     url: '/profile/subscriptions',
   },{
     key: 'tickets',
-    label: 'Tickets',
-    icon: <Icon type="book" />,
+    label: 'My Tickets',
+    icon: <Icon type="credit-card" />,
     url: '/profile/tickets',
   },
 ]
