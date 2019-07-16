@@ -12,8 +12,9 @@ const Registration = require('../../models/registration');
 const eventHelper = require('../../helpers/event');
 const model = require('../../helpers/model')
 const httpStatus = require('http-status');
-const google = require('../../helpers/google')
-const utils = require('../../helpers/common')
+const google = require('../../helpers/google');
+const utils = require('../../helpers/common');
+const admin = require('firebase-admin');
 
 const fs = require('fs');
 const GST = 0.05;
@@ -110,7 +111,7 @@ const create = async (req, res, next) => {
     _notifyNewEvent(tEvent, {exclude: currentUser.id, io: io});
 
     // return 
-    res.json(savedEvent);
+    res.json(eventHelper.refineResponseEvent(tEvent));
   } catch (e) {
     next(e)
   }
@@ -160,13 +161,14 @@ const _deleteEvent = async (id) => {
       for (const img of event.image) {
         console.log('images: ', img)
         const image = await File.findById(img).exec();
-
-        // delete image
-        utils.deleteUploadedFile(image.filename);
-
-        // delete data
-        await image.delete();
-        console.log(`delete image database: ${image.id}`);
+        if (image) {
+          // delete image
+          utils.deleteUploadedFile(image.filename);
+  
+          // delete data
+          await image.delete();
+          console.log(`delete image database: ${image.id}`);
+        }
       }
     }
 
@@ -327,6 +329,16 @@ const _notifyNewEvent = async (event, options = {}) => {
     console.log(`emit ${catId}`)
     io.emit(`cat/${catId}`, `A new event in ${catName} has been posted`)
   }
+
+  // notify firebase
+  const fcmResult = await _notifyNewEventFirebase({
+    title: 'New Event',
+    body: `A new event in ${catName} has been posted`,
+    data: event.id,
+    topic: `${catId}` // TODO: change to cat id later
+  });
+
+  console.log('topic', catId);
   
   const notification = {
     message: `A new event in ${catName} has been posted`,
@@ -335,6 +347,31 @@ const _notifyNewEvent = async (event, options = {}) => {
   }
 
   return _notify(uids, [notification])
+}
+
+const _getFirebaseMessagePayload = ({title, body, topic = 'music', eventId}) => {
+  return {
+    // data: {
+    //   eventId
+    // },
+    notification: {
+      title,
+      body
+    },
+    topic
+  };
+}
+
+const _notifyNewEventFirebase = async ({title, body, topic, eventId}) => {
+  admin.initializeApp({
+    credential: admin.credential.applicationDefault(),
+    // databaseURL: 'https://<DATABASE_NAME>.firebaseio.com'
+  });
+  const messaging = admin.messaging();
+  const message = _getFirebaseMessagePayload({title, body, topic, eventId})
+  console.log('message: ', message);
+  
+  return await messaging.send(message);
 }
 
 const testAddress = (req, res, next) => {

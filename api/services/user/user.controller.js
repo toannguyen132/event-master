@@ -15,6 +15,7 @@ const PdfPrinter = require('pdfmake');
 const fs = require('fs');
 const moment = require('moment');
 
+
 const get = async (req, res, next) => {
 
 }
@@ -285,6 +286,66 @@ const getSales = async (req, res, next) => {
   }
 }
 
+/**
+ * notify using firebase
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
+const notify = async(req, res, next) => {
+  try {
+    admin.initializeApp({
+      credential: admin.credential.applicationDefault(),
+      // databaseURL: 'https://<DATABASE_NAME>.firebaseio.com'
+    });
+    const defaultMessaging = admin.messaging();
+    var message = {
+      notification: {
+        title: 'Title',
+        body: 'gained 11.80 points to close at 835.67, up 1.43% on the day.'
+      },
+      topic: 'music'
+    };
+
+    defaultMessaging.send(message)
+      .then(response => {
+        res.json({
+          success: true,
+          result: response
+        })
+      })
+      .catch(err => {
+        throw new APIError(err.message, httpStatus.BAD_REQUEST, true);
+      })
+
+  } catch (error) {
+    next(error);
+  }
+}
+
+const readNotification = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user.id).exec();
+    const noId = req.params.id;
+
+    user.notifications = user.notifications.map(notification => {
+      if (notification.id == noId) {
+        notification.read = true;
+      }
+      return notification;
+    })
+
+    await user.save();
+
+    res.json({
+      success: true, 
+      result: user
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
 module.exports = { 
   profile, 
   update, 
@@ -298,5 +359,7 @@ module.exports = {
   getTickets,
   getPrintedTicket,
   getStatistic,
-  getSales
+  getSales,
+  notify,
+  readNotification
 };

@@ -38,6 +38,10 @@ export const getSalesApi = (api) => {
   return api.get('/user/sales').then(resp => resp.data)
 }
 
+export const readNotificationApi = (api, id) => {
+  return api.put(`/user/notification/${id}`).then(resp => resp.data)
+}
+
 export default {
   getProfile,
   updateProfile,

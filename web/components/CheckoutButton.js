@@ -39,7 +39,7 @@ class CheckoutButton extends Component {
             quantity
           }).then(resp => {
             logInfo('response from server ', resp)
-            message.error('successfully buy ticket')
+            message.success('successfully buy ticket')
             onSuccess(resp)
           }).catch(e => {
             message.error(e.message)

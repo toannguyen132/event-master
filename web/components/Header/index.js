@@ -6,7 +6,7 @@ import styled from 'styled-components'
 import { Menu } from 'antd'
 import urls from '../../model/urls'
 import { deauthenticate } from '../../redux/actions/authentication'
-import { refreshNotifications } from '../../redux/actions/user'
+import { refreshNotifications, readNotification } from '../../redux/actions/user'
 import { setListening } from '../../redux/actions/event'
 import { Component } from 'react'
 import io from 'socket.io-client'
@@ -95,14 +95,15 @@ const MenuItem = styled(Menu.Item)`
     opacity: 1;
   }
 `
-const NotificationItem = styled.a`
+const NotificationItem = styled.span`
   display: block;
 `
 
 const welcomeName = name => `Hello, ${name ? name : 'User' }`
 
-const NotificationList = (notifications = []) => {
+const NotificationList = (notifications = [], readNotification) => {
   const unread = notifications.filter((n) => n.read == false).map(n => n.id)
+  const onClick = (id) => () => readNotification(id)
 
   return () => (
     <Menu selectedKeys={unread} selectable={false}>
@@ -111,7 +112,7 @@ const NotificationList = (notifications = []) => {
           notifications.map((noti) => (
             <MenuItem key={noti.id}>
               <Link as={urls.showEvent(noti.data)} href={urls.showEventQuery(noti.data)}>
-                <NotificationItem href={urls.showEvent(noti.data)}>
+                <NotificationItem onClick={onClick(noti.id)}>
                   {noti.message}
                 </NotificationItem>
               </Link>
@@ -123,6 +124,7 @@ const NotificationList = (notifications = []) => {
     </Menu>
   )
 }
+
 
 class LayoutHeader extends Component {
 
@@ -162,7 +164,7 @@ class LayoutHeader extends Component {
   }
 
   render() {
-    const {currentUser, isLoggedIn, logout, headerSearch} = this.props
+    const {currentUser, isLoggedIn, logout, headerSearch, readNotification} = this.props
     const {hasNotification} = this.state
 
     const logUserOut = () => {
@@ -240,7 +242,7 @@ class LayoutHeader extends Component {
             <Avatar size={35} />
           </span>
         </Dropdown>
-        <Dropdown overlay={NotificationList(currentUser.notifications)} placement="bottomRight">
+        <Dropdown overlay={NotificationList(currentUser.notifications, readNotification)} placement="bottomRight">
           <Badge count={hasNotification ? 1 : 0} dot>
             <span className="notification" style={{marginLeft: '15px'}} >
               <Icon type="notification" />
@@ -283,7 +285,8 @@ class LayoutHeader extends Component {
 const mapDispatchToProps = dispatch => ({
   logout: () => dispatch(deauthenticate()),
   refreshNotifications: () => dispatch(refreshNotifications()),
-  setCategoryListening: (cat) => dispatch(setListening(cat))
+  setCategoryListening: (cat) => dispatch(setListening(cat)),
+  readNotification: id => dispatch(readNotification(id))
 })
 
 

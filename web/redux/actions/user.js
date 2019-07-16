@@ -1,9 +1,10 @@
 import { SET_USER, SET_CURRENT_USER, SET_SUBSCRIPTION, SET_NOTIFICATIONS, SET_REGISTRATION, SET_TICKETS, SET_STATISTIC } from '../types'
 import apiGenerator from '../../api'
-import userApi, {subscribe, unsubscribe, getRegistrationsApi, getTicketApi, getStatisticApi, getSalesApi} from '../../api/user'
+import userApi, {subscribe, unsubscribe, getRegistrationsApi, getTicketApi, getStatisticApi, getSalesApi, readNotificationApi} from '../../api/user'
 import _ from 'lodash'
 import getError from '../../utils/error'
 import { logInfo } from '../../utils/log'
+import { async } from '../../../../../../../Library/Caches/typescript/3.5/node_modules/rxjs/internal/scheduler/async';
 
 /**
  * NORMAL ACTIONS
@@ -207,11 +208,28 @@ export const getSales = (options = {}) => {
   }
 }
 
+export const readNotification = (id) => {
+  return async (dispatch, getState) => {
+    try {
+      const token = getState().authentication.token
+      const api = apiGenerator(token)
+
+      logInfo(`id: ${id}`)
+
+      const data = await readNotificationApi(api, id)
+      return data
+    } catch (error) {
+      throw getError(error)
+    }
+  }
+}
+
 export default {
   getProfile,
   setCurrentUser,
   setUser,
   refreshNotifications,
   getStatistic,
-  getSales
+  getSales,
+  readNotification
 }
