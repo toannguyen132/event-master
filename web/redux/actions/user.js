@@ -4,7 +4,6 @@ import userApi, {subscribe, unsubscribe, getRegistrationsApi, getTicketApi, getS
 import _ from 'lodash'
 import getError from '../../utils/error'
 import { logInfo } from '../../utils/log'
-import { async } from '../../../../../../../Library/Caches/typescript/3.5/node_modules/rxjs/internal/scheduler/async';
 
 /**
  * NORMAL ACTIONS
