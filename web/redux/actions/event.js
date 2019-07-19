@@ -91,8 +91,9 @@ export const createEvent = (event) => {
 }
 
 export const getCategories = () => {
-  return async (dispatch) => {
-    const api = apiGenerator()
+  return async (dispatch, getState) => {
+    const token = getState().authentication.token
+    const api = apiGenerator(token)
 
     try{
       const resp = await eventApi.getEventCategories(api)

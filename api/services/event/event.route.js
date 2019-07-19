@@ -14,7 +14,7 @@ router.route('/')
 
 /** get event categories */
 router.route('/category')
-  .get(eventCtrl.getCategories);
+  .get([isAuth], eventCtrl.getCategories);
 
 /** create new event */
 router.route('/')

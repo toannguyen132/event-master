@@ -264,7 +264,17 @@ const initUpload = async(req, res, next) => {
 const getCategories = async (req, res, next) => {
   try{
     const categories = await Category.find();
+
     const respCategories = categories.map(cat => eventHelper.refineResponseCategory(cat))
+      .map(cat => {
+        if (req.user.subscriptions.some( sub => sub.id == cat.id ) ) {
+          cat.subscribe = true
+        } else {
+          cat.subscribe = false
+        }
+        return cat
+      })
+
     res.json(respCategories)
   } catch(e) {
     next(e);

@@ -54,10 +54,11 @@ const myEvents = async(req, res, next) => {
   }
 }
 
+
 const subscribe = async(req, res, next) => {
   try {
     const currentUser = req.user;
-    const categoryId = req.body.categoryId
+    const categoryId = req.params.id || req.body.categoryId;
     const category = await Category.get(categoryId)
     let subscriptions = []
 

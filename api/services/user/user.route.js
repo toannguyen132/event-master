@@ -31,6 +31,9 @@ router.route('/subscribe')
   .post([isAuth, validate(paramValidation.subscribe)], userController.subscribe);
 
 router.route('/subscribe/:id')
+  .post([isAuth], userController.subscribe);
+
+router.route('/subscribe/:id')
   .delete([isAuth, validate(paramValidation.deleteSubscription)], userController.deleteSubscription);
 
 router.route('/notification')
