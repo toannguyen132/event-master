@@ -125,4 +125,12 @@ module.exports = {
     }
   },
 
+  createPayment: {
+    body: {
+      nonce: Joi.string().required(),
+      eventId: Joi.string().required(),
+      ticketId: Joi.string().required(),
+    }
+  }
+
 };

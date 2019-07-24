@@ -23,7 +23,10 @@ const envVarsSchema = Joi.object({
   MONGO_PORT: Joi.number()
     .default(27017),
   HOST: Joi.string(),
-  GOOGLE_API_KEY: Joi.string()
+  GOOGLE_API_KEY: Joi.string(),
+  BRAINTREE_MERCHANT_ID: Joi.string(),
+  BRAINTREE_PUBLIC_KEY: Joi.string(),
+  BRAINTREE_PRIVATE_KEY: Joi.string(),
 }).unknown()
   .required();
 
@@ -42,6 +45,11 @@ const config = {
   mongo: {
     host: envVars.MONGO_HOST,
     port: envVars.MONGO_PORT
+  },
+  braintree: {
+    merchantId: envVars.BRAINTREE_MERCHANT_ID,
+    publicKey: envVars.BRAINTREE_PUBLIC_KEY,
+    privateKey: envVars.BRAINTREE_PRIVATE_KEY,
   }
 };
 

@@ -5,6 +5,10 @@ const APIError = require('../helpers/APIError');
 const ObjectId = mongoose.Types.ObjectId;
 const Ticket = require('./ticket');
 const modelHelpers = require('../helpers/model');
+const Event = require('../models/event');
+
+const GST = 0.05;
+const PST = 0.07;
 
 const {getRespInvoice} = modelHelpers;
 
@@ -120,7 +124,76 @@ InvoiceSchema.statics = {
       .exec();
   },
 
-};
+  async generateInvoice(invoiceJson = {}) {
+    const {eventId, userId, name, address, quantity, ticketId} = invoiceJson;
+    const event = await Event.findById(eventId).exec();
+    const ticket = event.tickets.find( t => t._id == ticketId ).toJSON();
+
+    if (!ticket) throw new Exception("Ticket is not found");
+
+    const invoice = {
+      event: eventId,
+      user: userId,
+      name: name,
+      address: address
+    }
+
+    // calc price
+    const price = ticket.price;
+    const subtotal = quantity * price;
+    const gstAmount = GST * subtotal;
+    const pstAmount = PST * subtotal;
+    const total = subtotal + gstAmount + pstAmount;
+
+    // assign
+    invoice.subtotal = subtotal;
+    invoice.gst = gstAmount;
+    invoice.pst = pstAmount;
+    invoice.total = total;
+    invoice.ticketsCount = quantity;
+
+    return invoice;
+  },
+
+  async createInvoice({invoice, tickets}) {
+    // const session = await mongoose.startSession();
+    // session.startTransaction();
+    let savedInvoice = null
+    let savedTickets = []
+    try{
+      savedInvoice = await this.create(invoice);
+  
+      savedTickets = [];
+      let updatedTicket = null;
+      let savedticket = null
+  
+      for (const ticket of tickets) {
+        updatedTicket = ticket;
+        updatedTicket.invoice = savedInvoice.id;
+  
+        savedticket = await (new Ticket(ticket)).save();
+  
+        savedTickets.push(savedticket);
+      }
+  
+      // await session.commitTransaction();
+      // await session.endSession();
+      return await this.get(savedInvoice.id);
+    } catch (e) {
+      if (savedInvoice && savedInvoice.id) {
+        await savedInvoice.delete();
+      }
+      for (let t of savedTickets){
+        if (t.id) 
+          await t.delete()
+      }
+      // await session.abortTransaction();
+      // await session.endSession()
+      throw e;
+    }
+  }
+
+}
 
 /**
  * @typedef User

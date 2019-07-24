@@ -4,6 +4,7 @@ const httpStatus = require('http-status');
 const APIError = require('../helpers/APIError');
 const ObjectId = mongoose.Types.ObjectId;
 const Invoice = require('./invoice')
+const Event = require('./event')
 const modelHelpers = require('../helpers/model')
 
 const {getRespTicket} = modelHelpers
@@ -111,6 +112,32 @@ TicketSchema.statics = {
       .limit(+limit)
       .populate('event')
       .exec();
+  },
+
+  async generate({eventId, userId, invoiceId, ticketId, quantity = 1}) {
+    const event = await Event.findById(eventId).exec();
+    const ticket = event.tickets.find(t => t._id == ticketId);
+    if (!ticket) return null;
+    
+    if (quantity === 1) {
+      return {
+        ticketType: ticket.name,
+        event: eventId,
+        user: userId,
+        invoice: invoiceId
+      }
+    } else {
+      result = [];
+      for (let i = 0; i < quantity; i++) {
+        result.push({
+          ticketType: ticket.name,
+          event: eventId,
+          user: userId,
+          invoice: invoiceId
+        })
+      }
+      return result;
+    }
   },
 
 };
