@@ -51,7 +51,7 @@ class Events extends Component {
     return (
       <Layout>
         <AdminLayout activeKey="events">
-          <h1>My Events</h1>
+          <h1>All Events</h1>
           <Table columns={columns} dataSource={dataSet} rowKey="id"/>
         </AdminLayout>
       </Layout>

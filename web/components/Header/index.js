@@ -173,6 +173,21 @@ class LayoutHeader extends Component {
 
     const UserMenu = (
       <Menu>
+        {currentUser.role === 'admin' ? 
+          <Menu.Item key="admin">
+            <Link href={urls.admin}>
+              <div>
+                <Icon type="crown" />&nbsp;&nbsp;
+                Admin
+              </div>
+            </Link>
+          </Menu.Item>
+          : null
+        }
+        {currentUser.role === 'admin' ? 
+          <Menu.Divider />
+          : null
+        }
         <Menu.Item key="new-event">
           <Link href={urls.eventCreate}>
             <div>

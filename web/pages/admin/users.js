@@ -57,7 +57,7 @@ class Users extends Component {
     return (
       <Layout>
         <AdminLayout activeKey="users">
-          <h1>My Events</h1>
+          <h1>All Users</h1>
           <Table columns={columns} dataSource={dataSet} rowKey="id"/>
         </AdminLayout>
       </Layout>
