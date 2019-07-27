@@ -27,7 +27,7 @@ app.use(cors());
 // print log
 if (process.env.NODE_ENV == 'development') {
   app.use('/api', (req, res, next) => {
-    console.log(`${req.method} ${req.path}: query = ${JSON.stringify(req.query)}`)
+    console.log(`${req.method} ${req.path}: query = ${JSON.stringify(req.query)} - body = ${JSON.stringify(req.body)}`)
     next()
   });
 }

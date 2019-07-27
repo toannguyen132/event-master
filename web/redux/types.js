@@ -30,3 +30,7 @@ export const SET_REGISTRATION = `${USER}_SET_REGISTRATION`
 export const SET_TICKETS = `${USER}_SET_TICKETS`
 export const SET_STATISTIC = `${USER}_SET_STATISTIC`
 
+const ADMIN = 'ADMIN'
+export const SET_ADMIN_USERS = `${ADMIN}_SET_USERS`
+export const SET_ADMIN_EVENTS = `${ADMIN}_SET_EVENTS`
+

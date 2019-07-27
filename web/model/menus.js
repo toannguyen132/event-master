@@ -29,3 +29,23 @@ export const profileMenu = [
     url: '/profile/tickets',
   },
 ]
+
+export const adminMenu = [
+  {
+    key: 'dashboard',
+    label: 'Dashboard',
+    icon: <Icon type="dashboard" />,
+    url: '/admin',
+  },
+  {
+    key: 'users',
+    label: 'Users',
+    icon: <Icon type="user" />,
+    url: '/admin/users',
+  },{
+    key: 'events',
+    label: 'Events',
+    icon: <Icon type="calendar" />,
+    url: '/admin/events',
+  }
+]

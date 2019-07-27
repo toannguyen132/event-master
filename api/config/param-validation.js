@@ -130,6 +130,7 @@ module.exports = {
       nonce: Joi.string().required(),
       eventId: Joi.string().required(),
       ticketId: Joi.string().required(),
+      quantity: Joi.number().required(),
     }
   }
 

@@ -13,6 +13,8 @@
     "antd": "^3.18.2",
     "axios": "^0.18.0",
     "babel-plugin-import": "^1.11.2",
+    "braintree-web": "^3.48.0",
+    "braintree-web-drop-in": "^1.19.0",
     "cookie-parser": "^1.4.4",
     "express": "^4.17.0",
     "js-cookie": "^2.2.0",

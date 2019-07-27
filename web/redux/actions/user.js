@@ -1,6 +1,7 @@
 import { SET_USER, SET_CURRENT_USER, SET_SUBSCRIPTION, SET_NOTIFICATIONS, SET_REGISTRATION, SET_TICKETS, SET_STATISTIC } from '../types'
 import apiGenerator from '../../api'
 import userApi, {subscribe, unsubscribe, getRegistrationsApi, getTicketApi, getStatisticApi, getSalesApi, readNotificationApi} from '../../api/user'
+import {createPaymentApi} from '../../api/payment'
 import _ from 'lodash'
 import getError from '../../utils/error'
 import { logInfo } from '../../utils/log'
@@ -223,6 +224,22 @@ export const readNotification = (id) => {
   }
 }
 
+export const createPayment = (data = {}) => {
+  const {nonce, quantity, eventId, ticketId} = data
+
+  return async (dispatch, getState) => {
+    try {
+      const token = getState().authentication.token
+      const api = apiGenerator(token)
+
+      const data = await createPaymentApi(api, {nonce, quantity, eventId, ticketId})
+      return data
+    } catch (error) {
+      throw getError(error)
+    }
+  }
+}
+
 export default {
   getProfile,
   setCurrentUser,
@@ -230,5 +247,6 @@ export default {
   refreshNotifications,
   getStatistic,
   getSales,
-  readNotification
+  readNotification,
+  createPayment
 }

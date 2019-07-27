@@ -19,6 +19,7 @@ const isAuth = (req, res, next) => {
 
       User.getByEmail(decoded.email).then(user => {
         req.user = user;
+        req.isAdmin = user.role === 'admin' ? true : false
         next();
       });
     }

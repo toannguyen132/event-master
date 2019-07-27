@@ -160,6 +160,7 @@ InvoiceSchema.statics = {
     // session.startTransaction();
     let savedInvoice = null
     let savedTickets = []
+    let ticketsArr = Array.isArray(tickets) ? tickets : [tickets];
     try{
       savedInvoice = await this.create(invoice);
   
@@ -167,7 +168,7 @@ InvoiceSchema.statics = {
       let updatedTicket = null;
       let savedticket = null
   
-      for (const ticket of tickets) {
+      for (const ticket of ticketsArr) {
         updatedTicket = ticket;
         updatedTicket.invoice = savedInvoice.id;
   

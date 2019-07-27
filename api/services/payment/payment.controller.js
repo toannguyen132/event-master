@@ -40,27 +40,35 @@ const createPayment = async (req, res, next) => {
     // receive nonce
     const nonce = req.body.nonce;
     const quantity = req.body.quantity;
-
-    const result = await createTransaction({
-      amount: 10,
-      nonce: nonce
-    });
+    const eventId = req.body.eventId;
+    const userId = req.user.id;
+    const ticketId = req.body.ticketId;
+    const name = req.body.name || req.user.name;
+    const address = req.body.address || req.user.address;
     
     // save invoice
-    const eventId = "5d158d1f6789ce40aadb9a70";
-    const userId = "5cfa8081993ebe102b1ecb2e";
-    const ticketId = "5d158d1f6789ce40aadb9a72";
+    // const eventId = "5d158d1f6789ce40aadb9a70";
+    // const userId = "5cfa8081993ebe102b1ecb2e";
+    // const ticketId = "5d158d1f6789ce40aadb9a72";
     const invoice = await Invoice.generateInvoice({
       eventId,
       userId,
       ticketId,
       quantity,
-      name: "Toan test Nguyen",
-      address: "sample address",
+      name,
+      address
     })
+    console.log('invoice: ', invoice);
 
     // tickets
-    const tickets = await Ticket.generate({quantity, eventId, userId, ticketId});
+    const tickets = await Ticket.generate({eventId, userId, ticketId, quantity});
+    console.log('ticket: ', tickets);
+
+    // create transaction on braintree
+    const result = await createTransaction({
+      amount: invoice.total,
+      nonce: nonce
+    });
 
     await Invoice.createInvoice({invoice, tickets})
 

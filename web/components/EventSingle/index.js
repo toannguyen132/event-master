@@ -5,9 +5,12 @@ import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import { Row, Col, Button, message, Spin } from 'antd'
 import BuyModal from '../BuyModal'
+import CheckoutModal from '../CheckoutModal'
 import {register, deregister} from '../../redux/actions/event'
 import {fetchRegistrations} from '../../redux/actions/user'
 import urls from '../../model/urls'
+import { logInfo } from '../../utils/log'
+import dropin from 'braintree-web-drop-in'
 
 const defaultImage = '/static/img/thumb.jpg'
 
@@ -89,6 +92,7 @@ class EventSingle extends Component {
   state = { 
     registerLoading: false,
     buyModalVisible: false,
+    braintreeInstance: null,
   }
 
   handleRegister = async() => {
@@ -127,7 +131,6 @@ class EventSingle extends Component {
   }
 
   handleBuy = async () => {
-
     this.handleCloseModal()
   }
 
@@ -141,6 +144,16 @@ class EventSingle extends Component {
     if (this.props.isLogged) {
       this.props.fetchRegistrations()
     }
+
+    /* eslint-disable */
+    // dropin.create({
+    //   authorization: 'sandbox_9qcfwpnz_dmw5v53swmz2m45b',
+    //   container: '#dropin-container'
+    // }, (createErr, instance) => {
+    //   logInfo('init instance');
+    //   this.setState({braintreeInstance: instance});
+    // })
+    /* eslint-enable */
   }
 
   render() { 
@@ -207,9 +220,16 @@ class EventSingle extends Component {
             <div className="location">{location}</div>
           </Col>
         </Row>
-        <BuyModal 
+        {/* <BuyModal 
           tickets={tickets}
           onOk={this.handleBuy}
+          onCancel={this.handleCloseModal}
+          visible={this.state.buyModalVisible}
+        /> */}
+        <CheckoutModal
+          event={this.props.event}
+          tickets={tickets}
+          onOk={this.handleCloseModal}
           onCancel={this.handleCloseModal}
           visible={this.state.buyModalVisible}
         />

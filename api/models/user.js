@@ -101,6 +101,18 @@ UserSchema.statics = {
       });
   },
 
+  list({page = 1, search = ''}) {
+    const PER_PAGE = 50;
+    const offset = (page - 1) * PER_PAGE;
+    const limit = PER_PAGE;
+
+    return this.find({})
+      .sort({ createdAt: -1 })
+      .skip(+offset)
+      .limit(+limit)
+      .exec()
+  },
+
   getByEmail(email) {
     const query = this.findOne({ email })
     return query
