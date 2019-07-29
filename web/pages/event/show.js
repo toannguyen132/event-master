@@ -12,6 +12,10 @@ import { getCookie } from '../../utils/cookie'
 import initialize from '../../utils/initialize'
 
 class ShowEvent extends Component {
+  
+  componentDidMount() {
+  }
+
   render() {
     return (
       <Wrapper>

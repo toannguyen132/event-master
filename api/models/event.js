@@ -188,7 +188,7 @@ EventSchema.statics = {
       .exec();
   },
 
-  listCount({ s="", location = "", category = "", fromDate = new Date(), toDate = null}) {
+  listCount({ s="", location = "", owner = "", category = "", fromDate = new Date(), toDate = null}) {
     const today = new Date()
 
     const filter = {}
@@ -199,12 +199,22 @@ EventSchema.statics = {
     // apply category
     if (category) filter.category = ObjectId(category)
 
+    if (owner) filter.owner = ObjectId(owner)
+
     // apply date
     if (fromDate || toDate) filter.startDate = {}
     if (fromDate) filter.startDate['$gte'] = fromDate
     if (toDate) filter.startDate['$lte'] = toDate
 
     return this.countDocuments(filter).exec();
+  },
+
+  async countUpcoming() {
+    return await this.countDocuments({startDate: {$gte: new Date()}});
+  },
+
+  async countAll() {
+    return await this.countDocuments({});
   }
 
 };

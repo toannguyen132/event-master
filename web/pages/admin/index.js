@@ -4,23 +4,33 @@ import { connect } from 'react-redux'
 import Wrapper, { FloatedContent } from '../../components/Layout'
 import Link from 'next/link'
 import {display, TYPE_DATE} from '../../utils/display'
-import { Button } from 'antd'
+import { Button, Row, Col, Statistic } from 'antd'
 import { deauthenticate } from '../../redux/actions/authentication'
 import AdminLayout from '../../components/Layout/AdminLayout'
+import { getAdminStatistic } from '../../redux/actions/admin';
 
 class Index extends Component {
 
-  handleLogout = (e) => {
-    this.props.logout()
+  componentDidMount() {
+    this.props.getStatistic();
   }
 
   render() {
-    const currentUser = this.props.currentUser
-    const {name, email, dob, address} = currentUser
+    const {users, events, totalEvents} = this.props.statistic
     return (
       <Wrapper>
         <AdminLayout activeKey="dashboard">
-          Admin dashboard
+          <Row gutter={16}>
+            <Col sm={12} md={6} lg={6} xl={6}>
+              <Statistic title="Active Users" value={users} />
+            </Col>
+            <Col sm={12} md={6} lg={6} xl={6}>
+              <Statistic title="Upcoming Events" value={events} />
+            </Col>
+            <Col sm={12} md={6} lg={6} xl={6}>
+              <Statistic title="Total Events" value={totalEvents} />
+            </Col>
+          </Row>
         </AdminLayout>
       </Wrapper>
     )
@@ -28,18 +38,15 @@ class Index extends Component {
 }
 
 Index.getInitialProps = async function(ctx) {
-
   return {
-
   }
 }
 
-const mapStateToProps = ({authentication, user}) => ({
-  isLoggedIn: authentication.token ? true : false,
-  currentUser: user.currentUser
+const mapStateToProps = ({admin}) => ({
+  statistic: admin.statistic
 })
 const mapDispatchToProps = dispatch => ({
-  logout: () => dispatch(deauthenticate())
+  getStatistic: () => dispatch(getAdminStatistic())
 })
 
 

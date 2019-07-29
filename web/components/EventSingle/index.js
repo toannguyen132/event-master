@@ -11,6 +11,7 @@ import {fetchRegistrations} from '../../redux/actions/user'
 import urls from '../../model/urls'
 import { logInfo } from '../../utils/log'
 import dropin from 'braintree-web-drop-in'
+import {loadScript} from '../../utils/basic'
 
 const defaultImage = '/static/img/thumb.jpg'
 
@@ -146,6 +147,22 @@ class EventSingle extends Component {
     }
 
     /* eslint-disable */
+    loadScript(`https://maps.googleapis.com/maps/api/js?key=${process.env.GOOGLE_API_KEY}&callback=initMap`)
+      .then(() => {
+        // console.log('script loaded')
+        console.log(this.props.event)
+        const {coordinate} = this.props.event
+        const map = new google.maps.Map(document.getElementById('map'), {
+          center: coordinate,
+          zoom: 15,
+          disableDefaultUI: true
+        });
+
+        var marker = new google.maps.Marker({position: coordinate, map: map});
+
+      })
+
+    /* eslint-disable */
     // dropin.create({
     //   authorization: 'sandbox_9qcfwpnz_dmw5v53swmz2m45b',
     //   container: '#dropin-container'
@@ -209,15 +226,18 @@ class EventSingle extends Component {
           </Col>
         </Row>
         <Row type="flex">
-          <Col span={16} className="content-box content-box-main">
-            <Content>
+          <Col span={16}>
+            <Content className="content-box content-box-main">
               <h2 className="heading">Description</h2>
               <div className="description">{description}</div>
             </Content>
           </Col>
-          <Col span={8} className="content-box content-box-aside">
-            <h2 className="heading">Location</h2>
-            <div className="location">{location}</div>
+          <Col span={8}>
+            <Content className="content-box content-box-aside">
+              <h2 className="heading">Location</h2>
+              <div className="location">{location}</div>
+            </Content>
+            <div id="map" style={{width: '100%', height: '200px'}}></div>
           </Col>
         </Row>
         {/* <BuyModal 

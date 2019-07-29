@@ -18,4 +18,7 @@ router.route('/events')
 router.route('/events')
   .delete([isAuth, isAdmin], controller.deleteEvent);
 
+  router.route('/statistic')
+    .get([isAuth, isAdmin], controller.getStatistic);
+
 module.exports = router;

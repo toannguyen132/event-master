@@ -7,7 +7,7 @@ import AdminLayout from '../../components/Layout/AdminLayout'
 import apiCreator from '../../api'
 import { getUsersApi } from '../../api/admin'
 import { getCookie } from '../../utils/cookie'
-import { Table } from 'antd'
+import { Table, Tag } from 'antd'
 import moment from 'moment'
 import { DATE_TIME_FORMAT } from '../../utils/display'
 import urls from '../../model/urls'
@@ -38,6 +38,11 @@ class Users extends Component {
         title: 'Role',
         dataIndex: 'role',
         key: 'role',
+        render: (text) => {
+          if (text === 'user') return <Tag color="#87d068">{text}</Tag>
+          else if (text === 'admin') return <Tag color="#f50">{text}</Tag>
+          else if (text === 'event_owner') return <Tag color="#108ee9">{text}</Tag>
+        }
       },
       {
         title: 'Actions',

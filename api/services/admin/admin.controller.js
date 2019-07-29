@@ -48,8 +48,25 @@ const deleteEvent = async (req, res, next) => {
   }
 }
 
+const getStatistic = async (req, res, next) => {
+  try {
+    const userCount = await User.countDocuments({})
+    const eventCount = await Event.countUpcoming();
+    const totalEventCount = await Event.countAll();
+    
+    res.json({
+      userCount: userCount,
+      eventCount: eventCount,
+      totalEventCount: totalEventCount
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
 module.exports = {
   getUsers,
   getEvents,
-  deleteEvent
+  deleteEvent,
+  getStatistic 
 }
