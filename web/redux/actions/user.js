@@ -225,14 +225,14 @@ export const readNotification = (id) => {
 }
 
 export const createPayment = (data = {}) => {
-  const {nonce, quantity, eventId, ticketId} = data
+  const {nonce, quantity, eventId, ticketId, name, address} = data
 
   return async (dispatch, getState) => {
     try {
       const token = getState().authentication.token
       const api = apiGenerator(token)
 
-      const data = await createPaymentApi(api, {nonce, quantity, eventId, ticketId})
+      const data = await createPaymentApi(api, {nonce, quantity, eventId, ticketId, name, address})
       return data
     } catch (error) {
       throw getError(error)

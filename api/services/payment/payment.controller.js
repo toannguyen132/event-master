@@ -10,6 +10,7 @@ const eventHelper = require('../../helpers/event');
 const mongoose = require('mongoose');
 const braintree = require("braintree");
 const config = require('../../config/config')
+const httpStatus = require('http-status')
 
 var gateway = braintree.connect({
   environment: braintree.Environment.Sandbox,
@@ -76,7 +77,7 @@ const createPayment = async (req, res, next) => {
     res.json(invoice);
   } catch (e) {
     console.log('cannot create payment: ', e.message);
-    next(e);
+    next(new APIError(e.message, httpStatus.BAD_REQUEST, true));
   }
 }
 
