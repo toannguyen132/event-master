@@ -28,6 +28,7 @@ const createTransaction = ({amount, nonce}) => {
       }
     }, function(err, result) {
       if (err) {
+        console.log('create transaction fail: ', err.message);
         reject(err);
       }
       resolve(result)
