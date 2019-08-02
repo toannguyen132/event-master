@@ -44,7 +44,7 @@ class ViewPayment extends Component {
           // Submit payload.nonce to your server
           console.log('nonce' , payload.nonce)
           const checkoutData = {...this.props.checkoutData, nonce: payload.nonce}
-          console.log(checkoutData)
+          console.log('checkout data: ', checkoutData)
           this.props.createPayment(checkoutData)
             .then(() => {
               this.props.onSubmit()
