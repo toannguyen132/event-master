@@ -75,6 +75,7 @@ const createPayment = async (req, res, next) => {
 
     res.json(invoice);
   } catch (e) {
+    console.log('cannot create payment: ', e.message);
     next(e);
   }
 }
