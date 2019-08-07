@@ -7,7 +7,9 @@ import {display, TYPE_DATE} from '../../utils/display'
 import { Button, Tag, Typography, message } from 'antd'
 import { deauthenticate } from '../../redux/actions/authentication'
 import ProfileLayout from '../../components/Layout/ProfileLayout'
-import { getCategories } from '../../redux/actions/event'
+import apiCreator from '../../api'
+import { getCookie } from '../../utils/cookie'
+import { getEventCategories as getEventCategoriesApi } from '../../api/event'
 import { subscribeCategory, unsubscribeCategory} from '../../redux/actions/user'
 import styled from 'styled-components'
 
@@ -65,15 +67,25 @@ class Subscription extends Component {
 
 Subscription.getInitialProps = async function(ctx) {
   // get category
-  const categories = await ctx.store.dispatch(getCategories())
+  const token  = getCookie('token', ctx.req)
+  const api = apiCreator(token)
 
-  return {
-    categories
+  try {
+    const resp = await getEventCategoriesApi(api)
+    console.log(resp.data);
+    return {
+      categories: resp.data
+    }
+  } catch (e) {
+    console.log(e.message);
+    return {
+      categories: []
+    }
   }
 }
 
 const mapStateToProps = ({event, user}) => ({
-  categories: event.categories,
+  // categories: event.categories,
   currentUser: user.currentUser
 })
 const mapDispatchToProps = dispatch => ({
