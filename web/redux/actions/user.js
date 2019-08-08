@@ -16,6 +16,18 @@ export const setCurrentUser = user => {
   }
 }
 
+export const clearCurrentUser = () => {
+  return setCurrentUser({
+    name: '',
+    email: '',
+    dob: '',
+    address: '',
+    role: '',
+    subscriptions: [],
+    notifications: []
+  })
+}
+
 export const setUser = user => {
   return {
     type: SET_USER,

@@ -3,9 +3,9 @@ import { AUTHENTICATE, DEAUTHENTICATE, SET_LOGIN_MESSAGE, SET_REGISTER_MESSAGE }
 import { setCookie, removeCookie } from '../../utils/cookie'
 import createApi from '../../api'
 import authApi from '../../api/auth'
+import {clearCurrentUser} from '../actions/user'
 import { message } from 'antd'
 import _ from 'lodash'
-import getError from '../../utils/error'
 
 /**
  * NORMAL ACTIONS
@@ -77,6 +77,7 @@ export const deauthenticate = () => {
     removeCookie('token')
     Router.push('/')
     dispatch({type: DEAUTHENTICATE})
+    dispatch(clearCurrentUser())
   }
 }
 
