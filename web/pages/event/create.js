@@ -38,15 +38,12 @@ class CreateEvent extends Component {
       tickets: tickets.filter(t => t.name && t.price)
     }
 
-    logInfo(eventData);
-
-
-    // this.props.createEvent(eventData).then(() => {
-    //   message.success("Event has been created");
-    //   Router.push(urls.home)
-    // }).catch(e => {
-    //   message.error(`Error has been occurred: ${e.message}`);
-    // });
+    this.props.createEvent(eventData).then(() => {
+      message.success("Event has been created");
+      Router.push(urls.home)
+    }).catch(e => {
+      message.error(`Error has been occurred: ${e.message}`);
+    });
   }
 
   render() {

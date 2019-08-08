@@ -22,6 +22,16 @@ const refineResponseEvent = (event) => {
     lat: event.lat,
     lng: event.lng
   }
+
+  const tickets = event.tickets ?  event.tickets.map(t => ({
+    id: t._id,
+    ...t.toJSON(),
+    price: t.price
+  })) : [];
+  
+  // console.log(tickets);
+  // console.log(event.tickets);
+  
   return {
     id: event._id,
     name: event.name,
@@ -41,10 +51,7 @@ const refineResponseEvent = (event) => {
     startDate: event.startDate,
     endDate: event.endDate,
     images: event.image.map(_getImageResp),
-    tickets: event.tickets ? event.tickets.map(t => ({
-      id: t._id,
-      ...t.toJSON()
-    })) : [],
+    tickets: tickets,
     goingCount: event.goingCount,
     createdAt: event.createdAt
   }

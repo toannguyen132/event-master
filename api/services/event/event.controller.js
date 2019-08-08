@@ -101,7 +101,7 @@ const create = async (req, res, next) => {
       status: 'public'
     });
     
-    // save to dâtbase
+    // save to database
     const savedEvent = await event.save();
 
     const io = req.app.get('io');

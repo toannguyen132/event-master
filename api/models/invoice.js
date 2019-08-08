@@ -139,7 +139,7 @@ InvoiceSchema.statics = {
     }
 
     // calc price
-    const price = ticket.price;
+    const price = (ticket.price / 100).toFixed(2);
     const subtotal = quantity * price;
     const gstAmount = GST * subtotal;
     const pstAmount = PST * subtotal;
