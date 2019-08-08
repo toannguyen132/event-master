@@ -12,6 +12,10 @@ import urls from '../../model/urls'
 import { message } from 'antd'
 import { logInfo } from '../../utils/log'
 import { DATE_TIME_FORMAT } from '../../utils/display'
+import { setAuthToken } from '../../redux/actions/authentication'
+import apiCreator from '../../api'
+import { getEventCategories } from '../../api/event'
+import { getCookie } from '../../utils/cookie'
 
 const CreateForm = createForm({name: 'create-event'})
 
@@ -34,12 +38,15 @@ class CreateEvent extends Component {
       tickets: tickets.filter(t => t.name && t.price)
     }
 
-    this.props.createEvent(eventData).then(() => {
-      message.success("Event has been created");
-      Router.push(urls.home)
-    }).catch(e => {
-      message.error(`Error has been occurred: ${e.message}`);
-    });
+    logInfo(eventData);
+
+
+    // this.props.createEvent(eventData).then(() => {
+    //   message.success("Event has been created");
+    //   Router.push(urls.home)
+    // }).catch(e => {
+    //   message.error(`Error has been occurred: ${e.message}`);
+    // });
   }
 
   render() {
@@ -48,7 +55,7 @@ class CreateEvent extends Component {
       name: "New Event",
       description: "this is an example event",
       location: 'Douglas College, 700 Royal Ave, New Westminster, BC V3M 5Z5, Canada',
-      category: this.props.categories[0].id,
+      category: this.props.categories.length > 0 ? this.props.categories[0].id : '',
       tickets: [{
         name: "",
         price: 0
@@ -61,7 +68,7 @@ class CreateEvent extends Component {
         moment().set({hour: 18, minute: 0, second: 0})]
     }),
     {
-      category: {options: this.props.categories}
+      category: { options: this.props.categories.length > 0 ? this.props.categories : []}
     })
 
     if (this.props.currentUser.role == 'user') {
@@ -82,11 +89,15 @@ class CreateEvent extends Component {
 CreateEvent.getInitialProps = async function(ctx) {
   try {
     // await ctx.store.dispatch(eventActions.fetchEvent())
-    const categories = await ctx.store.dispatch(getCategories())
+    const token  = getCookie('token', ctx.req)
+    const api = apiCreator(token)
+    const resp = await getEventCategories(api)
+    
     return {
-      categories
+      categories: resp.data
     }
   } catch (e) {
+    console.log(e.message);
     return {
       categories: []
     }
