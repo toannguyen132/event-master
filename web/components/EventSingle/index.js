@@ -190,9 +190,9 @@ class EventSingle extends Component {
         max = tickets[0].price
       }
       tickets.forEach(ticket => {
-        if (ticket.price < min) {
+        if (ticket.price > min) {
           min = ticket.price
-        } else if (ticket.price > max) {
+        } else if (ticket.price < max) {
           max = ticket.price
         }
       })
