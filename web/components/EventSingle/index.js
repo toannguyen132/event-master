@@ -45,10 +45,10 @@ const Content = styled.div`
 
 const Image = styled.div`
   background-position: center;
-  background-size: contain;
+  background-size: cover;
   background-repeat: no-repeat;
   height: 400px;
-  background: #000;
+  background-color: #000;
 `
 
 const HeadInfo = styled.div`
@@ -185,6 +185,10 @@ class EventSingle extends Component {
     const getMinMax = (tickets) => {
       let min = 999999
       let max = 0
+      if (tickets.length > 0) {
+        min = tickets[0].price
+        max = tickets[0].price
+      }
       tickets.forEach(ticket => {
         if (ticket.price < min) {
           min = ticket.price
